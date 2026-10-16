@@ -1,0 +1,1049 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>AI Station 用户反馈与产品现状分析</title>
+  <style>
+    :root {
+      --ink: #162033;
+      --muted: #657084;
+      --line: #dfe5ec;
+      --paper: #f6f7f9;
+      --card: #ffffff;
+      --blue: #315a9e;
+      --blue-soft: #eaf1fb;
+      --teal: #16827b;
+      --teal-soft: #e4f4f1;
+      --violet: #7053b7;
+      --violet-soft: #f0ebfb;
+      --orange: #bd6a1f;
+      --orange-soft: #fff1df;
+      --green: #3f7d4d;
+      --green-soft: #e9f4e9;
+      --red: #c25151;
+      --red-soft: #fbe9e7;
+      --yellow: #9f7814;
+      --yellow-soft: #fff5cd;
+      --navy: #183b66;
+      --shadow: 0 14px 40px rgba(20, 31, 51, .08);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 9% 5%, rgba(49,90,158,.09), transparent 25rem),
+        radial-gradient(circle at 92% 18%, rgba(22,130,123,.08), transparent 24rem),
+        var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    .shell { width: min(1480px, calc(100% - 40px)); margin: 0 auto; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(246,247,249,.88);
+      border-bottom: 1px solid rgba(223,229,236,.9);
+    }
+    .nav {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 750; letter-spacing: -.02em; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 9px; background: var(--navy); display: grid; place-items: center; color: white; font-size: 12px; }
+    .nav-links { display: flex; gap: 5px; flex-wrap: wrap; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 13px; padding: 7px 10px; border-radius: 999px; }
+    .nav-links a:hover { color: var(--ink); background: white; box-shadow: 0 4px 14px rgba(20,31,51,.07); }
+    .nav-links a.repo-link { color: #fff; background: #24292f; }
+    .nav-links a.repo-link:hover { color: #fff; background: #111827; }
+
+    .hero { padding: 56px 0 30px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; color: var(--blue); font-size: 12px; font-weight: 760; letter-spacing: .08em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: currentColor; }
+    h1 { max-width: 880px; margin: 15px 0 12px; font-size: clamp(34px, 4.4vw, 64px); line-height: 1.07; letter-spacing: -.045em; }
+    .hero-copy { max-width: 860px; color: var(--muted); font-size: 16px; }
+    .hero-meta { margin-top: 25px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill { display: inline-flex; align-items: center; gap: 7px; padding: 7px 11px; border: 1px solid var(--line); background: rgba(255,255,255,.8); border-radius: 999px; color: var(--muted); font-size: 12px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    main { padding-bottom: 70px; }
+    .board {
+      --tone: var(--blue);
+      --soft: var(--blue-soft);
+      scroll-margin-top: 78px;
+      margin-top: 24px;
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .board.collect { --tone: var(--teal); --soft: var(--teal-soft); }
+    .board.users { --tone: var(--violet); --soft: var(--violet-soft); }
+    .board.needs { --tone: var(--orange); --soft: var(--orange-soft); }
+    .board.decisions { --tone: var(--green); --soft: var(--green-soft); }
+    .board.positioning { --tone: var(--navy); --soft: var(--blue-soft); }
+    .board-head { display: grid; grid-template-columns: 74px 1fr auto; gap: 20px; align-items: center; padding: 28px 30px; border-bottom: 1px solid var(--line); }
+    .board-no { width: 62px; height: 62px; border-radius: 18px; display: grid; place-items: center; background: var(--tone); color: white; font-size: 19px; font-weight: 800; }
+    .board h2 { margin: 0; font-size: 25px; line-height: 1.15; letter-spacing: -.025em; }
+    .board-sub { margin-top: 5px; color: var(--muted); font-size: 13px; }
+    .tone-chip { color: var(--tone); background: var(--soft); border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .board-body { padding: 28px 30px 32px; }
+    .subhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin: 24px 0 12px; }
+    .subhead:first-child { margin-top: 0; }
+    .subhead h3 { margin: 0; font-size: 17px; letter-spacing: -.015em; }
+    .note { color: var(--muted); font-size: 12px; }
+
+    /* collection tree */
+    .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 25px; }
+    .metric { padding: 16px; border-radius: 15px; border: 1px solid var(--line); background: #fff; }
+    .metric strong { display: block; font-size: 25px; line-height: 1; color: var(--tone); }
+    .metric span { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; }
+    .tree-funnel { position: relative; padding: 2px 0 4px; }
+    .tree-level { display: grid; gap: 14px; margin: 0 auto; position: relative; }
+    .tree-level.root { width: min(350px, 100%); }
+    .tree-level.branches { grid-template-columns: 17fr 12fr; width: min(980px, 88%); margin-top: 44px; }
+    .tree-level.leaves { grid-template-columns: repeat(6, 1fr); width: 100%; margin-top: 44px; }
+    .tree-level.branches::before,
+    .tree-level.leaves::before { content: ""; position: absolute; left: 50%; top: -44px; height: 28px; width: 1px; background: #b9c7d2; }
+    .tree-level.branches::after,
+    .tree-level.leaves::after { content: ""; position: absolute; top: -16px; height: 1px; background: #b9c7d2; }
+    .tree-level.branches::after { left: 25%; right: 20%; }
+    .tree-level.leaves::after { left: 8%; right: 8%; }
+    .tree-node { position: relative; border: 1px solid color-mix(in srgb, var(--tone) 28%, var(--line)); border-radius: 18px; background: var(--soft); padding: 17px 18px; text-align: center; }
+    .tree-node::before { content: ""; position: absolute; left: 50%; top: -17px; height: 17px; width: 1px; background: #b9c7d2; }
+    .root .tree-node::before { display: none; }
+    .tree-node.primary { background: var(--tone); color: white; }
+    .tree-node .big { font-size: 30px; font-weight: 820; line-height: 1; }
+    .tree-node .label { margin-top: 6px; font-size: 13px; font-weight: 700; }
+    .tree-node .desc { margin-top: 4px; font-size: 11px; color: var(--muted); }
+    .tree-node.primary .desc { color: rgba(255,255,255,.75); }
+    .tree-node.done { background: var(--green-soft); border-color: #b7d4bc; }
+    .tree-node.live { background: var(--yellow-soft); border-color: #ead582; }
+    .tree-node.off { background: var(--red-soft); border-color: #ecc1bc; }
+    .tree-node.neutral { background: #f1f3f6; }
+    .owner-strip { margin-top: 24px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .owner { border-left: 4px solid var(--tone); padding: 13px 15px; background: #f8fafb; border-radius: 0 12px 12px 0; }
+    .owner strong { font-size: 14px; }
+    .owner span { color: var(--muted); font-size: 12px; margin-left: 8px; }
+
+    /* user matrix */
+    .matrix-wrap { overflow-x: auto; padding-bottom: 5px; }
+    .matrix { min-width: 1130px; display: grid; grid-template-columns: 126px repeat(4, 1fr); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: var(--line); gap: 1px; }
+    .matrix > div { background: white; }
+    .matrix .axis { padding: 12px; background: var(--soft); color: var(--tone); display: grid; place-items: center; text-align: center; font-size: 12px; font-weight: 760; }
+    .matrix .cell { min-height: 164px; padding: 9px; display: flex; flex-direction: column; gap: 8px; }
+    .matrix .cell.empty { display: grid; place-items: center; color: #a0a7b3; font-size: 12px; background: #fbfcfd; }
+    .user-card { border-radius: 13px; padding: 11px 12px; background: #faf8fe; border: 1px solid #e6ddf8; }
+    .user-card .who { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 780; }
+    .user-card .who-meta { display: flex; align-items: center; gap: 5px; }
+    .feedback-count { flex: 0 0 auto; padding: 2px 6px; border-radius: 6px; color: #625777; background: #eee9f8; font-size: 10px; font-weight: 800; }
+    .priority { flex: 0 0 auto; padding: 2px 6px; border-radius: 6px; font-size: 10px; font-weight: 800; }
+    .priority.p0 { color: var(--red); background: var(--red-soft); }
+    .priority.p1 { color: var(--orange); background: var(--orange-soft); }
+    .user-card ul { margin: 8px 0 0; padding-left: 17px; color: #475267; font-size: 11px; line-height: 1.45; }
+    .user-card li + li { margin-top: 5px; }
+    .user-card li strong { color: #2e3748; font-weight: 760; }
+    .user-card.collaboration { background: #f3f1f9; border-style: dashed; border-color: #cfc5e5; }
+    .user-card .collaboration-note { margin: 7px 0 0; color: #655b75; font-size: 10px; line-height: 1.5; }
+    .feedback-tag-legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px; padding: 10px 12px; border: 1px solid #e0e4ea; border-radius: 12px; background: #f8fafc; }
+    .feedback-tag-legend > strong { margin-right: 3px; color: #39455a; font-size: 10px; }
+    .problem-tag { display: inline-flex; align-items: center; margin: 3px 0 0 4px; padding: 2px 5px; border-radius: 999px; font-size: 8px; font-weight: 800; line-height: 1.2; vertical-align: 1px; }
+    .problem-tag[data-type="功能缺失"] { color: #6b4aa5; background: #eee8fa; }
+    .problem-tag[data-type="性能不足"] { color: #a45c18; background: #fff0dc; }
+    .problem-tag[data-type="易用性"] { color: #24669a; background: #e6f1fa; }
+    .problem-tag[data-type="输出质量"] { color: #aa4848; background: #fbe8e8; }
+    .problem-tag[data-type="模型/设备兼容"] { color: #336c5d; background: #e5f3ee; }
+    .problem-tag[data-type="需求/规则未定义"] { color: #6f647e; background: #efedf2; }
+    .problem-tag[data-type="已验证能力"] { color: #2e7851; background: #e5f4eb; }
+    .problem-tag[data-type="方案建议"] { color: #7b671b; background: #f7f1d6; }
+    .scene-board { scroll-margin-top: 82px; margin-top: 20px; }
+    .scene-title { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+    .scene-title h3 { margin: 0; font-size: 17px; letter-spacing: -.015em; }
+    .scene-title span { color: var(--muted); font-size: 11px; text-align: right; }
+    .scene-legend { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+    .scene-legend span { padding: 4px 8px; border-radius: 999px; font-size: 9px; font-weight: 750; }
+    .legend-feedback { color: #604796; background: #f0ebfb; }
+    .legend-testing { color: #26765a; background: #e8f6ef; }
+    .legend-expert { color: #96601e; background: #fff1dc; }
+    .legend-collab { color: #5f4891; background: #eee9f8; }
+    .legend-untested { color: #747d89; background: #eef0f2; }
+    .scene-scroll { overflow-x: auto; padding-bottom: 7px; }
+    .scene-grid { min-width: 1540px; display: grid; grid-template-columns: repeat(6, minmax(235px, 1fr)); gap: 10px; align-items: start; }
+    .scene-lane { overflow: hidden; border: 1px solid #dfd8ed; border-radius: 15px; background: #faf9fd; }
+    .scene-head { min-height: 86px; padding: 13px 12px; background: #f0ebfb; border-bottom: 1px solid #dfd8ed; }
+    .scene-head strong { display: block; color: var(--violet); font-size: 12px; }
+    .scene-head small { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .scene-head .scene-count { display: inline-block; margin-top: 7px; padding: 2px 6px; border-radius: 999px; background: white; color: var(--violet); font-size: 9px; font-weight: 800; }
+    .scene-stack { display: grid; gap: 7px; padding: 8px; }
+    .scene-person { padding: 10px; border: 1px solid #e1d9f0; border-radius: 10px; background: white; }
+    .scene-person-top { display: flex; align-items: center; justify-content: space-between; gap: 7px; }
+    .scene-person-top strong { font-size: 11px; }
+    .scene-state { flex: 0 0 auto; padding: 2px 6px; border-radius: 999px; background: #f0ebfb; color: #654d9a; font-size: 8px; font-weight: 800; }
+    .scene-person p { margin: 6px 0 0; color: #4f596d; font-size: 9px; line-height: 1.5; }
+    .scene-person.untested { border-color: #dfe2e6; background: #f1f3f5; }
+    .scene-person.untested .scene-person-top strong, .scene-person.untested p { color: #747d89; }
+    .scene-person.untested .scene-state { color: #747d89; background: #e3e6e9; }
+    .scene-person.testing { border-color: #a9d7c5; background: #eef8f3; }
+    .scene-person.testing .scene-state { color: #26765a; background: #d8f0e5; }
+    .scene-person.expert { border-color: #f0c987; background: #fff8ec; }
+    .scene-person.expert .scene-state { color: #96601e; background: #ffe9c7; }
+    .scene-person.collab { border-color: #cfc5e5; background: #f5f2fb; }
+    .scene-person.collab .scene-state { color: #5f4891; background: #e8e0f7; }
+    .scene-evidence { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+    .scene-evidence a { position: relative; display: block; height: 54px; overflow: hidden; border: 1px solid rgba(92,73,132,.16); border-radius: 8px; background: #edf0f4; box-shadow: 0 2px 8px rgba(32,40,58,.06); }
+    .scene-evidence img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform .2s ease; }
+    .scene-evidence a:hover img { transform: scale(1.04); }
+    .scene-evidence span { position: absolute; left: 4px; bottom: 4px; padding: 2px 5px; border-radius: 999px; color: white; background: rgba(25,31,44,.76); font-size: 7px; font-weight: 800; line-height: 1.2; }
+    .scene-evidence.single { grid-template-columns: 1fr; }
+    .scene-evidence a.scene-document { display: flex; align-items: center; gap: 8px; padding: 8px 9px; color: #4d3b7a; background: linear-gradient(135deg, #f4f0fc, #edf3fb); text-decoration: none; }
+    .scene-document-icon { flex: 0 0 auto; display: grid; place-items: center; width: 30px; height: 36px; border-radius: 7px; color: white; background: #7053b7; font-size: 8px; font-weight: 900; letter-spacing: .03em; }
+    .scene-document-copy { min-width: 0; }
+    .scene-document-copy strong { display: block; overflow: hidden; color: #3e335d; font-size: 8px; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+    .scene-document-copy small { display: block; margin-top: 3px; color: #756b88; font-size: 7px; }
+    .expert-review { margin-top: 16px; padding: 16px; border: 1px solid #e1d8f4; border-radius: 16px; background: linear-gradient(135deg, #faf8fe, #f6f8fc); }
+    .expert-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+    .expert-head strong { font-size: 14px; color: var(--violet); }
+    .expert-head span { color: var(--muted); font-size: 11px; }
+    .expert-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .expert-case { padding: 13px 14px; border: 1px solid #e6ddf8; border-radius: 13px; background: white; }
+    .expert-case h4 { margin: 0 0 7px; font-size: 13px; }
+    .expert-case p { margin: 0; color: #475267; font-size: 11px; line-height: 1.55; }
+    .expert-case .case-trigger { margin-top: 9px; color: var(--violet); }
+    .expert-case-layout { display: grid; grid-template-columns: minmax(150px, 210px) minmax(0, 1fr); gap: 14px; align-items: start; }
+    .expert-media { margin: 0; }
+    .expert-media video { display: block; width: 100%; aspect-ratio: 9 / 16; max-height: 340px; border-radius: 11px; background: #111827; object-fit: contain; box-shadow: 0 8px 20px rgba(45, 32, 78, .12); }
+    .expert-media figcaption { margin-top: 7px; color: #776d8a; font-size: 9px; line-height: 1.45; }
+    .expert-copy { min-width: 0; }
+    .expert-object-label { display: inline-flex; align-items: center; margin-bottom: 9px; padding: 4px 8px; border-radius: 999px; color: #59428e; background: #f0ebfb; font-size: 9px; font-weight: 800; }
+    .case-location { display: inline-flex; margin-top: 9px; padding: 4px 8px; border-radius: 999px; background: #f2eefb; color: var(--violet); font-size: 9px; font-weight: 800; }
+    .task-board { margin-top: 20px; scroll-margin-top: 82px; }
+    .task-wrap { overflow-x: auto; }
+    .task-table { min-width: 1360px; width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid #dce2e9; border-radius: 16px; overflow: hidden; font-size: 10px; }
+    .task-table th, .task-table td { padding: 11px 12px; border-right: 1px solid #e2e6eb; border-bottom: 1px solid #e2e6eb; vertical-align: top; line-height: 1.5; }
+    .task-table th:last-child, .task-table td:last-child { border-right: 0; }
+    .task-table tr:last-child td { border-bottom: 0; }
+    .task-table thead th { color: white; background: #273650; text-align: left; font-size: 10px; }
+    .task-table tbody tr:nth-child(even) td { background: #fafbfd; }
+    .task-table td:first-child { width: 9%; font-weight: 800; color: #243047; }
+    .task-table th:nth-child(2) { width: 17%; }
+    .task-table th:nth-child(3) { width: 16%; }
+    .task-table th:nth-child(4) { width: 16%; }
+    .task-table th:nth-child(5) { width: 24%; }
+    .completion { display: inline-flex; margin-top: 6px; padding: 3px 7px; border-radius: 999px; font-size: 8px; font-weight: 850; }
+    .completion.partial { color: #9b621e; background: #fff0d7; }
+    .completion.blocked { color: #a34444; background: #fbe7e7; }
+    .completion.validated { color: #2f7655; background: #e4f3ea; }
+    .fit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .fit-card { padding: 14px; border: 1px solid #dbe1e8; border-radius: 14px; background: #fbfcfd; }
+    .fit-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .fit-card h4 { margin: 0; font-size: 13px; }
+    .fit-level { flex: 0 0 auto; padding: 3px 7px; border-radius: 999px; font-size: 8px; font-weight: 850; }
+    .fit-level.high { color: #2e7651; background: #e3f3ea; }
+    .fit-level.mid { color: #9b621e; background: #fff0d7; }
+    .fit-level.low { color: #a34444; background: #fbe7e7; }
+    .fit-level.pending { color: #666f7c; background: #eceff2; }
+    .fit-card p { margin: 8px 0 0; color: #505b6e; font-size: 10px; line-height: 1.55; }
+    .fit-card p strong { color: #28354b; }
+
+    /* needs */
+    .need-map { display: grid; grid-template-columns: 1.1fr 1fr .9fr; gap: 14px; }
+    .need-lane { border: 1px solid var(--line); border-radius: 17px; overflow: hidden; background: #fff; }
+    .need-lane.common { --lane: #315a9e; --lane-soft: #eaf1fb; }
+    .need-lane.segment { --lane: #7053b7; --lane-soft: #f0ebfb; }
+    .need-lane.point { --lane: #bd6a1f; --lane-soft: #fff1df; }
+    .lane-head { background: var(--lane-soft); padding: 15px 16px; color: var(--lane); }
+    .lane-head strong { display: block; font-size: 15px; }
+    .lane-head span { font-size: 11px; color: var(--muted); }
+    .need-stack { padding: 9px; display: grid; gap: 7px; }
+    .need { padding: 10px 11px; border-radius: 11px; border: 1px solid var(--line); background: white; }
+    .need-main { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: start; }
+    .need-copy strong { display: block; font-size: 12px; }
+    .need-copy small { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; line-height: 1.45; }
+    .need-footer { margin-top: 8px; padding-top: 7px; border-top: 1px dashed #e1e5ea; display: flex; align-items: center; justify-content: space-between; }
+    .case-trigger { border: 0; background: transparent; padding: 0; color: var(--lane, var(--tone)); font: inherit; font-size: 10px; font-weight: 800; cursor: pointer; }
+    .case-trigger:hover { text-decoration: underline; }
+    .need-toolbar { margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid #d7e1ec; border-radius: 12px; background: #f7fafc; color: var(--muted); font-size: 11px; }
+    .edit-toggle { border: 1px solid var(--tone); border-radius: 9px; background: white; color: var(--tone); padding: 6px 10px; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
+    .edit-toggle.active { background: var(--tone); color: white; }
+    .needs.editing [contenteditable="true"] { outline: 1px dashed #8d72cf; outline-offset: 3px; border-radius: 3px; background: #fbf9ff; cursor: text; }
+    .needs.editing .status { cursor: pointer; box-shadow: 0 0 0 1px rgba(112,83,183,.25); }
+    .status { border: 0; font-family: inherit; padding: 3px 7px; border-radius: 999px; font-size: 10px; font-weight: 800; white-space: nowrap; }
+    .status.true { color: var(--green); background: var(--green-soft); }
+    .status.pending { color: var(--yellow); background: var(--yellow-soft); }
+    .status.boundary { color: var(--red); background: var(--red-soft); }
+    .deep-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .deep-card { padding: 14px; border-radius: 14px; background: #fffaf4; border: 1px solid #f1dbc0; }
+    .deep-card .deep-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .deep-card strong { font-size: 13px; }
+    .deep-card p { margin: 7px 0 0; color: var(--muted); font-size: 11px; }
+    .spec-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .spec-card { padding: 15px; border: 1px solid #dce2e9; border-radius: 14px; background: #fbfcfd; }
+    .spec-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .spec-top strong { font-size: 13px; }
+    .spec-card dl { display: grid; grid-template-columns: 78px 1fr; gap: 6px 10px; margin: 10px 0 0; font-size: 10px; line-height: 1.5; }
+    .spec-card dt { color: #637086; font-weight: 800; }
+    .spec-card dd { margin: 0; color: #3e485b; }
+    .metric-chip { display: inline-flex; padding: 3px 7px; border-radius: 999px; color: #315a9e; background: #e8f0fa; font-size: 8px; font-weight: 850; }
+    .spec-toolbar { margin: 10px 0 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid #d7e1ec; border-radius: 12px; background: #f7fafc; color: var(--muted); font-size: 11px; }
+    .spec-toolbar-actions { display: flex; gap: 7px; flex: 0 0 auto; }
+    .spec-reset { border: 1px solid #cfd7e2; border-radius: 9px; background: white; color: #657086; padding: 6px 10px; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
+    .spec-section.editing .spec-card { border-color: #cdbfee; box-shadow: 0 0 0 2px rgba(112,83,183,.06); }
+    .spec-section.editing .spec-card [contenteditable="true"] { outline: 1px dashed #8d72cf; outline-offset: 3px; border-radius: 3px; background: #fbf9ff; cursor: text; }
+    .spec-save-state { color: #5d7088; white-space: nowrap; }
+
+    /* internal feedback evidence */
+    .internal-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin: 10px 0 13px; }
+    .internal-stat { padding: 12px 13px; border: 1px solid #dce2e9; border-radius: 13px; background: #fbfcfd; }
+    .internal-stat strong { display: block; color: #273650; font-size: 18px; line-height: 1.1; }
+    .internal-stat span { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; line-height: 1.4; }
+    .internal-proof-board { display: grid; grid-template-columns: 1.18fr 1fr .9fr; gap: 12px; align-items: start; }
+    .internal-lane { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: #f8fafc; }
+    .internal-lane.confirmed { --internal-tone: #347255; --internal-soft: #e7f3eb; }
+    .internal-lane.validate { --internal-tone: #315a9e; --internal-soft: #eaf1fb; }
+    .internal-lane.not-need { --internal-tone: #8b642c; --internal-soft: #fff2dc; }
+    .internal-lane-head { padding: 14px 15px; color: var(--internal-tone); background: var(--internal-soft); border-bottom: 1px solid var(--line); }
+    .internal-lane-head strong { display: block; font-size: 14px; }
+    .internal-lane-head span { display: block; margin-top: 3px; color: #5e6879; font-size: 9px; line-height: 1.45; }
+    .internal-stack { display: grid; gap: 8px; padding: 9px; }
+    .internal-card { padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: white; }
+    .internal-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .internal-card h4 { margin: 0; color: #26344b; font-size: 12px; }
+    .internal-judgment { flex: 0 0 auto; padding: 3px 7px; border-radius: 999px; color: var(--internal-tone); background: var(--internal-soft); font-size: 8px; font-weight: 850; }
+    .internal-meta { margin-top: 4px; color: #758092; font-size: 8px; }
+    .internal-card p { margin: 7px 0 0; color: #4b566a; font-size: 10px; line-height: 1.55; }
+    .internal-card p strong { color: #2e3a50; }
+    .internal-evidence-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .internal-evidence-link { display: inline-flex; padding: 4px 7px; border: 1px solid #d8e0e9; border-radius: 8px; color: var(--internal-tone); background: #f8fafc; font-size: 8px; font-weight: 800; text-decoration: none; }
+    .internal-rule { margin: 12px 0 0; padding: 11px 13px; border-left: 4px solid #7053b7; border-radius: 10px; color: #4c4560; background: #f4f0fb; font-size: 10px; line-height: 1.55; }
+
+    /* evidence cases */
+    .case-modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 24px; background: rgba(22,30,45,.58); backdrop-filter: blur(5px); }
+    .case-modal.hidden { display: none; }
+    .case-panel { width: min(820px, 100%); max-height: min(86vh, 820px); overflow: auto; border-radius: 20px; background: white; box-shadow: 0 24px 70px rgba(20,30,48,.28); }
+    .case-head { position: sticky; top: 0; z-index: 2; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px 20px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.96); }
+    .case-head h3 { margin: 0; font-size: 18px; }
+    .case-head p { margin: 4px 0 0; color: var(--muted); font-size: 11px; }
+    .case-close { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 50%; background: white; color: var(--muted); cursor: pointer; font-size: 18px; }
+    .case-body { padding: 18px 20px 22px; display: grid; gap: 12px; }
+    .case-card { border: 1px solid var(--line); border-radius: 15px; padding: 14px; background: #fbfcfd; }
+    .case-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .case-card strong { font-size: 13px; }
+    .evidence-chip { border-radius: 999px; padding: 3px 7px; background: #eaf1fb; color: #315a9e; font-size: 9px; font-weight: 800; }
+    .case-card p { margin: 8px 0 0; color: #475267; font-size: 11px; line-height: 1.6; }
+    .case-card video { display: block; width: 100%; margin-top: 12px; border-radius: 12px; background: #101722; }
+    .case-limit { margin-top: 8px; padding: 8px 10px; border-radius: 9px; background: var(--yellow-soft); color: #72580f; font-size: 10px; }
+    .case-note-label { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 750; }
+    .case-note { width: 100%; min-height: 72px; margin-top: 6px; resize: vertical; border: 1px solid var(--line); border-radius: 10px; padding: 10px; font: inherit; font-size: 11px; color: var(--ink); background: white; }
+
+    /* decisions */
+    .decision-channels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+    .decision-lane { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: #f8fafc; }
+    .decision-lane.fix { --lane-color: #b84c4c; --lane-soft: #fbeaea; }
+    .decision-lane.validate { --lane-color: #315a9e; --lane-soft: #eaf1fb; }
+    .decision-lane.define { --lane-color: #9b661f; --lane-soft: #fff2dc; }
+    .decision-lane-head { padding: 15px; color: var(--lane-color); background: var(--lane-soft); border-bottom: 1px solid var(--line); }
+    .decision-lane-head strong { display: block; font-size: 15px; }
+    .decision-lane-head span { display: block; margin-top: 4px; color: #5e6879; font-size: 10px; line-height: 1.45; }
+    .decision-stack { display: grid; gap: 8px; padding: 9px; }
+    .decision { position: relative; border: 1px solid var(--line); border-radius: 15px; padding: 14px; background: white; overflow: hidden; }
+    .decision::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--lane-color, var(--tone)); }
+    .decision-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .decision h4 { margin: 3px 0 0; font-size: 14px; }
+    .coverage { color: var(--muted); font-size: 10px; white-space: nowrap; }
+    .decision p { margin: 8px 0 10px; color: var(--muted); font-size: 11px; min-height: 34px; }
+    .checks { display: flex; flex-wrap: wrap; gap: 5px; }
+    .check { cursor: pointer; user-select: none; display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 8px; border: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+    .check input { accent-color: var(--green); margin: 0; }
+    .check:has(input:checked) { background: var(--green-soft); color: var(--green); border-color: #b9d7bd; font-weight: 780; }
+    .schedule { margin-top: 11px; display: flex; justify-content: space-between; align-items: center; font-size: 10px; }
+    .schedule strong { color: var(--lane-color, var(--tone)); font-size: 11px; }
+
+    /* positioning and competitor */
+    .position-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+    .position-card { padding: 17px; border-radius: 15px; border: 1px solid #cad7e6; background: #f7fafe; }
+    .position-card:nth-child(2) { background: #f5f1fc; border-color: #ddd0f2; }
+    .position-card:nth-child(3) { background: #eaf5ec; border-color: #c9dfcd; }
+    .position-card strong { display: block; font-size: 15px; }
+    .position-card ul { margin: 9px 0 0; padding-left: 17px; color: var(--muted); font-size: 11px; }
+    .compare-wrap { overflow-x: auto; }
+    .compare { min-width: 920px; width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; font-size: 12px; }
+    .compare th, .compare td { padding: 12px 13px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .compare th:last-child, .compare td:last-child { border-right: 0; }
+    .compare tr:last-child td { border-bottom: 0; }
+    .compare thead th { background: var(--navy); color: white; text-align: left; font-size: 12px; }
+    .compare thead th:first-child { width: 16%; }
+    .compare tbody tr:nth-child(even) td { background: #f8fafc; }
+    .compare td:first-child { font-weight: 760; color: var(--navy); }
+    .evidence { display: inline-flex; margin-top: 5px; border-radius: 999px; padding: 2px 6px; background: var(--yellow-soft); color: var(--yellow); font-size: 9px; font-weight: 750; }
+    .compare-callout { margin-top: 13px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .compare-callout > div { border-radius: 13px; padding: 13px 14px; font-size: 11px; }
+    .compare-callout .advantage { background: var(--green-soft); color: #315d39; }
+    .compare-callout .gap { background: var(--yellow-soft); color: #72580f; }
+    .source-strip { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 16px; padding: 11px 13px; border: 1px solid #cdd9e7; border-radius: 12px; background: #f5f8fc; color: #42536b; font-size: 11px; }
+    .source-strip strong { color: var(--navy); }
+    .control-card { border: 1px solid #bdd5c1; border-radius: 16px; padding: 17px; background: linear-gradient(135deg, #edf7ef, #f8fbf8); }
+    .control-card h4 { margin: 0; font-size: 15px; }
+    .control-card p { margin: 5px 0 0; color: #4b6451; font-size: 11px; }
+    .control-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-top: 14px; }
+    .control-stat { padding: 12px; border-radius: 12px; background: rgba(255,255,255,.82); border: 1px solid #d4e6d7; }
+    .control-stat strong { display: block; color: var(--green); font-size: 20px; line-height: 1.1; }
+    .control-stat span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+    .proof-card { border: 1px solid var(--line); border-radius: 14px; padding: 14px; background: white; }
+    .proof-card .proof-name { font-size: 13px; font-weight: 800; color: var(--navy); }
+    .proof-card .proof-config { margin-top: 2px; color: var(--muted); font-size: 10px; }
+    .proof-card ul { margin: 9px 0 0; padding-left: 17px; color: #475267; font-size: 11px; }
+    .proof-card li + li { margin-top: 3px; }
+    .conclusion-bar { margin-top: 12px; padding: 13px 14px; border-radius: 13px; background: var(--navy); color: white; font-size: 11px; }
+    .conclusion-bar strong { color: #bfe4ff; }
+
+    .footer { padding: 26px 0 46px; color: var(--muted); font-size: 11px; text-align: center; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 980px) {
+      .board-head { grid-template-columns: 58px 1fr; }
+      .board-no { width: 52px; height: 52px; }
+      .tone-chip { display: none; }
+      .metrics { grid-template-columns: repeat(3, 1fr); }
+      .tree-level.leaves { grid-template-columns: repeat(3, 1fr); }
+      .tree-level.leaves::after { display: none; }
+      .tree-level.leaves .tree-node::before { display: none; }
+      .need-map, .decision-channels, .fit-grid, .internal-proof-board { grid-template-columns: 1fr 1fr; }
+      .internal-summary { grid-template-columns: repeat(2, 1fr); }
+      .deep-grid, .spec-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 680px) {
+      .shell { width: min(100% - 22px, 1480px); }
+      .nav { align-items: flex-start; padding: 12px 0; }
+      .nav-links { display: none; }
+      .hero { padding-top: 34px; }
+      .board { border-radius: 18px; }
+      .board-head { padding: 20px; gap: 12px; }
+      .board-body { padding: 20px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .tree-level.branches { width: 100%; grid-template-columns: 1fr; }
+      .tree-level.branches::before, .tree-level.branches::after { display: none; }
+      .tree-level.branches .tree-node::before { display: none; }
+      .tree-level.leaves { grid-template-columns: 1fr 1fr; }
+      .owner-strip, .expert-grid, .need-map, .deep-grid, .spec-grid, .decision-channels, .fit-grid, .position-cards, .compare-callout, .proof-grid, .control-stats, .internal-proof-board, .internal-summary { grid-template-columns: 1fr; }
+      .expert-case-layout { grid-template-columns: 1fr; }
+      .expert-media video { width: min(100%, 250px); margin: 0 auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <div class="brand"><span class="brand-mark">S</span><span>Siltok 用户测试看板</span></div>
+      <nav class="nav-links" aria-label="页面导航">
+        <a href="#collection">反馈采集</a><a href="#users">用户分层</a><a href="#scenarios">用户场景</a><a href="#needs">需求分类</a><a href="#internal-feedback">内部反馈</a><a href="#decisions">研发决策</a><a href="#positioning">产品定位与竞品</a><a class="repo-link" href="https://github.com/hemolin23/ai-station-user-feedback-dashboard" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell hero">
+    <h1>AI Station 用户反馈与产品现状分析</h1>
+    <div class="hero-meta">
+      <span class="pill"><i class="dot" style="color:var(--teal)"></i>有效反馈 10 / 29</span>
+      <span class="pill"><i class="dot" style="color:var(--green)"></i>已进入测试 17</span>
+      <span class="pill"><i class="dot" style="color:var(--orange)"></i>真需求以问题成立为准</span>
+      <span class="pill"><i class="dot" style="color:var(--navy)"></i>竞品信息标注证据状态</span>
+    </div>
+  </div>
+
+  <main class="shell">
+    <section class="board collect" id="collection">
+      <div class="board-head"><div class="board-no">01</div><div><h2>用户反馈采集树状漏斗</h2><div class="board-sub">用树状分支同时呈现“进入测试”和“尚未进入测试”，避免单一漏斗掩盖流失原因</div></div><span class="tone-chip">样本与回收</span></div>
+      <div class="board-body">
+        <div class="metrics">
+          <div class="metric"><strong>29</strong><span>本轮用户名单</span></div>
+          <div class="metric"><strong>17</strong><span>已进入实际测试</span></div>
+          <div class="metric"><strong>10</strong><span>有效反馈</span></div>
+          <div class="metric"><strong>34.5%</strong><span>总体反馈覆盖率</span></div>
+          <div class="metric"><strong>58.8%</strong><span>已测试用户回收率</span></div>
+        </div>
+        <div class="tree-funnel" aria-label="测试用户采集树状漏斗">
+          <div class="tree-level root"><div class="tree-node primary"><div class="big">29</div><div class="label">本轮全量用户</div><div class="desc">均已明确对接人</div></div></div>
+          <div class="tree-level branches">
+            <div class="tree-node"><div class="big">17</div><div class="label">已进入测试</div><div class="desc">账号已分发，占58.6%</div></div>
+            <div class="tree-node neutral"><div class="big">12</div><div class="label">未进入或暂停</div><div class="desc">尚未形成产品使用证据</div></div>
+          </div>
+          <div class="tree-level leaves">
+            <div class="tree-node done"><div class="big">10</div><div class="label">有效反馈</div><div class="desc">完成测试</div></div>
+            <div class="tree-node"><div class="big">6</div><div class="label">已分发未反馈</div><div class="desc">需继续追踪</div></div>
+            <div class="tree-node live"><div class="big">1</div><div class="label">正在测试</div><div class="desc">荣图</div></div>
+            <div class="tree-node neutral"><div class="big">5</div><div class="label">推迟</div><div class="desc">等待重新约期</div></div>
+            <div class="tree-node live"><div class="big">1</div><div class="label">推进中</div><div class="desc">界外科技</div></div>
+            <div class="tree-node off"><div class="big">6</div><div class="label">意向断联</div><div class="desc">尚未分发</div></div>
+          </div>
+        </div>
+        <div class="owner-strip">
+          <div class="owner"><strong>石根洁</strong><span>负责22人 · 有效8人 · 36.4%</span></div>
+          <div class="owner"><strong>李楠</strong><span>负责2人 · 有效1人 · 50.0%</span></div>
+          <div class="owner"><strong>王亚丽</strong><span>负责5人 · 有效1人 · 20.0%</span></div>
+        </div>
+        <div class="note" style="margin-top:10px">碳水大王、AI设计张张通过微信私发反馈，已计入10份有效反馈。</div>
+      </div>
+    </section>
+
+    <section class="board users" id="users">
+      <div class="board-head"><div class="board-no">02</div><div><h2>用户分层与反馈看板</h2><div class="board-sub">10位有效反馈用户共62条反馈点；另收录1位未测试导演评审与1个未测试深度共创团队，均不计入反馈覆盖率</div></div><span class="tone-chip">用户与问题</span></div>
+      <div class="board-body">
+        <div class="feedback-tag-legend"><strong>反馈标签</strong><span class="problem-tag" data-type="功能缺失">功能缺失</span><span class="problem-tag" data-type="性能不足">性能不足</span><span class="problem-tag" data-type="易用性">易用性</span><span class="problem-tag" data-type="输出质量">输出质量</span><span class="problem-tag" data-type="模型/设备兼容">模型/设备兼容</span><span class="problem-tag" data-type="需求/规则未定义">需求/规则未定义</span><span class="problem-tag" data-type="已验证能力">已验证能力</span><span class="problem-tag" data-type="方案建议">方案建议</span></div>
+        <div class="matrix-wrap">
+          <div class="matrix">
+            <div class="axis">参与方式<br>×<br>使用能力</div><div class="axis">需要引导</div><div class="axis">独立使用</div><div class="axis">专业生产</div><div class="axis">熟练运用comfyUI 和智能体</div>
+            <div class="axis">深度共创</div><div class="cell empty">暂无完成样本</div><div class="cell empty">暂无完成样本</div>
+            <div class="cell"><div class="user-card"><div class="who">Carl｜电商广告 <span class="who-meta"><span class="feedback-count">8条</span><span class="priority p0">P0</span></span></div><ul><li><strong>投流图片文字：</strong>细节元素中的汉字出现糊字、错字和非正常字。</li><li><strong>动作战斗图：</strong>握刀姿势错误，刀柄出现分离。</li><li><strong>世界观设定图：</strong>画面中意外生成“烬潮纪”文字。</li><li><strong>场景融合：</strong>海报中的“青蓝潮登”位置突兀，未与场景融合；短提示词难以直接使用。</li><li><strong>图生图一致性：</strong>生成后鞋面颜色发生变化。</li><li><strong>人物与结构：</strong>图片中的人物、物体结构和细节容易失真。</li><li><strong>文生视频：</strong>高架桥、办公室多人等场景画面模糊，无法直接用于投放。</li><li><strong>模型可用性：</strong>部分模型点击生成后才提示不可用，缺少提交前校验。</li></ul></div><div class="user-card"><div class="who">日本短剧公司 <span class="who-meta"><span class="feedback-count">4条</span><span class="priority p1">P1</span></span></div><ul><li><strong>生成时长：</strong>15秒视频平均等待接近10分钟，对生产流程偏久。</li><li><strong>提示词还原：</strong>模型无法精准呈现提示词，同提示词对比结果存在明显差距。</li><li><strong>画面质感：</strong>超写实、去AI感不足，对设备与光线的锁定不稳定。</li><li><strong>生产流程：</strong>30分钟以上项目依赖自由画布以减少资产导入和尾帧续做，现有 Dash 逻辑暂不能作为主流生产工具。</li></ul></div><div class="user-card"><div class="who">李哲｜AI漫剧 <span class="who-meta"><span class="feedback-count">8条</span><span class="priority p1">P1</span></span></div><ul><li><strong>耗时不透明：</strong>任务显示6分钟，实际超过18分钟，排队时间未被清晰呈现。</li><li><strong>速度瓶颈：</strong>5090＋H3生成15秒内容约6分钟；建议按急活、精品、批量场景定义速度标准。</li><li><strong>画质差异：</strong>480P人脸模糊；竖屏可达交付级，横屏细节较差且存在局部异常。</li><li><strong>文字能力：</strong>H3/LTX在横版游戏和广告场景中的文字生成效果较弱。</li><li><strong>交互与报错：</strong>音频选项不可控；空格播放会返回操作界面；失败后不知道如何继续。</li><li><strong>并发与批量：</strong>需要多任务并行及“挂清单→排队→自动生产”的批量链路。</li><li><strong>能力边界：</strong>暂不支持用户自主训练模型，需在产品中明确说明。</li><li><strong>本地生产：</strong>希望联动 AE/PR，并为工作室提供双卡或多卡集群方案。</li></ul></div></div>
+            <div class="cell empty">暂无完成样本</div>
+            <div class="axis">标准测试</div><div class="cell empty">暂无完成样本</div>
+            <div class="cell"><div class="user-card"><div class="who">嘉弈｜自媒体 <span class="who-meta"><span class="feedback-count">4条</span><span class="priority p0">P0</span></span></div><ul><li><strong>模型可用性：</strong>生图时部分模型无法使用，任务直接失败。</li><li><strong>AI对话：</strong>模型响应速度过慢。</li><li><strong>视频速度：</strong>非满血模型生成15秒、720P视频约需60分钟。</li><li><strong>音频质量：</strong>生成视频的音频不清晰，并伴有回音。</li></ul></div></div>
+            <div class="cell"><div class="user-card"><div class="who">白总·沈阳 <span class="who-meta"><span class="feedback-count">5条</span><span class="priority p1">P1</span></span></div><ul><li><strong>批量稳定性：</strong>5070服务器出现“请求超时10秒”，任务耗时波动较大。</li><li><strong>接口能力：</strong>批量生产需要API支持任务提交、进度查询、结果获取和失败重试。</li><li><strong>质量验证：</strong>需与 Seedance 同条件比较提示词还原度、人物动作一致性与成片可用率。</li><li><strong>提示词优化：</strong>未带来提速，优化后5070/5090总耗时反而约增3.4%/2.5%。</li><li><strong>设备效率：</strong>5090约为5070的4倍；480P理想产能约为720P的2.5倍，但不是可用成片产能。</li></ul></div><div class="user-card"><div class="who">白总·电商 <span class="who-meta"><span class="feedback-count">10条</span><span class="priority p1">P1</span></span></div><ul><li><strong>界面占位：</strong>提示词与生成窗口占屏过大，查看历史视频需频繁滚动。</li><li><strong>参数保存：</strong>切页返回后模型、比例、分辨率、时长、FPS、LoRA、音频全部重置。</li><li><strong>模型说明：</strong>仅看到模型名称，不清楚各模型擅长的任务。</li><li><strong>素材资产库：</strong>人物、商品、声音、场景每次都要重新上传。</li><li><strong>项目管理：</strong>历史任务以会话分散，需按项目、商品、类型、版本建文件夹。</li><li><strong>参考图标注：</strong>无法标注人物、商品、包装、服装、场景或风格等用途。</li><li><strong>多分镜导演台：</strong>单个大提示词难以控制多镜头，需要逐镜设置人物、动作、运镜、对白与时长。</li><li><strong>自动拼接：</strong>不同镜头生成后仍需用户手动后期拼接。</li><li><strong>专业模式：</strong>默认界面对新手友好，但专业用户需要展开完整模型参数。</li><li><strong>自定义工作流：</strong>希望支持导入创作者自己的 ComfyUI 节点与工作流。</li></ul></div><div class="user-card"><div class="who">碳水大王 <span class="who-meta"><span class="feedback-count">4条</span><span class="priority p1">P1</span></span></div><ul><li><strong>网络连接：</strong>Tailscale 默认不接受公司节点发布的内网子网路由，无法访问192.168.123/124网段。</li><li><strong>问题处理：</strong>开启 <code>accept-routes=true</code> 后路由生效，已能正常连接。</li><li><strong>短剧效果：</strong>目标画面需要精细调整，当前空间与场景实现效果一般。</li><li><strong>内容边界：</strong>希望生成带轻度血腥感的限制级画面和声音，但未成功。</li></ul></div></div>
+            <div class="cell"><div class="user-card"><div class="who">小皓｜工作流 <span class="who-meta"><span class="feedback-count">10条＋1案例</span><span class="priority p0">P0</span></span></div><ul><li><strong>长任务稳定性：</strong>云端批量或长任务频繁掉线，无法安心挂机。</li><li><strong>工作流案例：</strong>提供《雨后微光》红纸船30秒命令文档，展示Codex接管ComfyUI完成环境盘点、分镜、生成、抽帧质检、局部返工与成片输出的完整方法。</li><li><strong>实际画质：</strong>选择1080P时观感约为480P，光影和特效明显低一档。</li><li><strong>本地/云端差异：</strong>同一指令下云端H3与本地 MiniMax 结果差异很大。</li><li><strong>速度质量权衡：</strong>加速约5倍但质量下降；不加速仍模糊且耗时超过1小时。</li><li><strong>资源供给：</strong>云端仅4台机器，测试需排期，规模化使用受限。</li><li><strong>正向反馈：</strong>认可新版本UI，认为整体体验有明显改善。</li><li><strong>自动化期待：</strong>希望云端工作流可持续、无限运行，实现批量全自动生产。</li><li><strong>开放接入：</strong>建议接入 Muse 类AI并调用合适API，不依赖 Codex，让云端电脑持续执行。</li><li><strong>Muse云端样片：</strong>用户称提供的20.37秒、1080×1920竖屏古装视频由Muse云端以“1K画质”生成；平台、生成耗时和无人值守能力仍需接口实测。</li></ul></div><div class="user-card"><div class="who">倪海敬｜独立创作 <span class="who-meta"><span class="feedback-count">5条</span><span class="priority p0">P0</span></span></div><ul><li><strong>人物生图：</strong>Z-Image遗漏朱红短披风；Boogu画面模糊且多生成一把刀。</li><li><strong>结构数量：</strong>世界观图要求五条能量线路，实际生成出多条。</li><li><strong>文生视频：</strong>画面模糊、人脸看不清，且每次都会出现。</li><li><strong>测试阻塞：</strong>视频任务2缺少参考图，无法继续测试。</li><li><strong>工作流建议：</strong>提示词采用三段式/六段式，并增加“插值扩展sigma”节点提升清晰度。</li></ul></div><div class="user-card"><div class="who">AI设计张张 <span class="who-meta"><span class="feedback-count">4条</span><span class="priority p1">P1</span></span></div><ul><li><strong>FLUX生图：</strong>质量差、提示词遵循不足，怀疑当前工作流或模型配置不正确。</li><li><strong>视频方案：</strong>自己的 MiniMax H3 双采工作流指令遵循较好，偶发问题可重生成解决。</li><li><strong>图片方案：</strong>Qwen 2.1 工作流效果接近 GPT，稳定性更符合预期。</li><li><strong>一键生产：</strong>已有内置提示词的一键直出软件，视频用H3双采、图片用Qwen 2.1，但需要租用云端机器。</li></ul></div></div>
+            <div class="axis">轻量验证</div><div class="cell empty">待补充</div><div class="cell empty">待补充</div><div class="cell empty">待补充</div><div class="cell empty">待补充</div>
+          </div>
+        </div>
+        <template id="northAmericaCollabCard">
+          <div class="user-card collaboration"><div class="who">冰河｜北美 Sedence 团队 <span class="who-meta"><span class="feedback-count">深度共创</span></span></div><p class="collaboration-note">已提供无尽满血权限，明确放弃本轮上机测试。该关系按合作资源与深度共创记录，不计入10份有效反馈，也不产生产品问题结论。</p></div>
+        </template>
+        <div class="scene-board" id="scenarios">
+          <div class="scene-title"><h3>用户场景看板｜场景 × 个人反馈</h3><span>29人直接放入对应场景；灰色为未测试，姓名下方注明反馈或未测试原因</span></div>
+          <div class="scene-legend"><span class="legend-feedback">已反馈</span><span class="legend-testing">测试中</span><span class="legend-expert">专家评审</span><span class="legend-collab">深度共创</span><span class="legend-untested">未测试／未反馈</span></div>
+          <div class="scene-scroll">
+            <div class="scene-grid">
+              <section class="scene-lane"><div class="scene-head"><strong>AI短剧／漫剧／影游</strong><small>连续分镜、角色一致、动作与叙事成片</small><span class="scene-count">5人</span></div><div class="scene-stack">
+                <article class="scene-person"><div class="scene-person-top"><strong>日本短剧公司</strong><span class="scene-state">已反馈</span></div><p>15秒视频接近10分钟；提示词还原、超写实质感和连续项目生产能力不足。</p></article>
+                <article class="scene-person"><div class="scene-person-top"><strong>李哲</strong><span class="scene-state">已反馈</span></div><p>预计6分钟实际超过18分钟；480P人脸模糊、横屏质量较弱，需要并发队列和AE／PR联动。</p><div class="scene-evidence"><a href="assets/li-zhe-feedback-2.png" target="_blank" rel="noopener"><img src="assets/li-zhe-feedback-2.png" alt="李哲测试耗时和画质反馈截图"><span>耗时／画质</span></a><a href="assets/li-zhe-feedback-1.png" target="_blank" rel="noopener"><img src="assets/li-zhe-feedback-1.png" alt="李哲音频与交互反馈截图"><span>交互反馈</span></a></div></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>千堇</strong><span class="scene-state">未测试</span></div><p>太忙，待复联。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>点众</strong><span class="scene-state">未测试</span></div><p>等待API上线后再测试。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>张老师</strong><span class="scene-state">未反馈</span></div><p>账号已分发，尚未回收测试反馈。</p></article>
+              </div></section>
+
+              <section class="scene-lane"><div class="scene-head"><strong>电商／广告／文旅素材</strong><small>商品展示、投放变体、批量与交付效率</small><span class="scene-count">7人</span></div><div class="scene-stack">
+                <article class="scene-person"><div class="scene-person-top"><strong>Carl</strong><span class="scene-state">已反馈</span></div><p>投流图文字、握刀结构和商品颜色容易失真；多人复杂场景视频模糊，部分模型提交后才提示不可用。</p></article>
+                <article class="scene-person"><div class="scene-person-top"><strong>白总·电商</strong><span class="scene-state">已反馈</span></div><p>参数切页重置；缺少人物、商品、声音和场景资产库，以及项目管理、多分镜控制和自动拼接。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>子龙</strong><span class="scene-state">未反馈</span></div><p>电商公司，可再次复联。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>孙建楷</strong><span class="scene-state">未反馈</span></div><p>账号已分发，尚未回收测试反馈。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>界外科技</strong><span class="scene-state">推进中</span></div><p>仍在推进测试安排，暂未形成使用反馈。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>杨老师</strong><span class="scene-state">未反馈</span></div><p>账号已分发，尚未回收测试反馈。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>王老师</strong><span class="scene-state">推迟</span></div><p>测试推迟，等待重新约期。</p></article>
+              </div></section>
+
+              <section class="scene-lane"><div class="scene-head"><strong>影视／CG／视觉制作</strong><small>分镜还原、运镜、影调与后期衔接</small><span class="scene-count">5人</span></div><div class="scene-stack">
+                <article class="scene-person"><div class="scene-person-top"><strong>白总·沈阳</strong><span class="scene-state">已反馈</span></div><p>5070批量任务出现请求超时；需要API提交、进度查询、结果获取、失败重试和同条件质量验证。</p><div class="scene-evidence"><a href="assets/baizong-shenyang-benchmark.png" target="_blank" rel="noopener"><img src="assets/baizong-shenyang-benchmark.png" alt="白总沈阳MiniMax H3测试报告截图"><span>测试报告</span></a><a href="assets/baizong-shenyang-qa.png" target="_blank" rel="noopener"><img src="assets/baizong-shenyang-qa.png" alt="白总沈阳测试明细截图"><span>测试明细</span></a></div></article>
+                <article class="scene-person expert"><div class="scene-person-top"><strong>辛导</strong><span class="scene-state">专家评审</span></div><p>未上机测试；基于两条送审样片指出AI感与影调不足、视听语言单一，以及动画规律与手指结构问题，并另提供参考成品。</p><div class="scene-evidence"><a href="assets/xindao-reviewed-sample-tone.mp4" target="_blank" rel="noopener"><img src="assets/xindao-reviewed-sample-tone.jpg" alt="辛导评审的真人近景送审样片封面"><span>送审样片一</span></a><a href="assets/xindao-reviewed-sample-animation.mp4" target="_blank" rel="noopener"><img src="assets/xindao-reviewed-sample-animation.jpg" alt="辛导评审的动漫动作送审样片封面"><span>送审样片二</span></a></div></article>
+                <article class="scene-person collab"><div class="scene-person-top"><strong>冰河｜北美 Sedence 团队</strong><span class="scene-state">深度共创</span></div><p>已提供无尽满血权限，明确放弃本轮测试；作为合作资源与深度共创关系记录，不计入有效反馈。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>李文博</strong><span class="scene-state">未测试</span></div><p>意向用户尚未分发，目前断联。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>崔海飞</strong><span class="scene-state">未测试</span></div><p>意向用户尚未分发，目前断联。</p></article>
+              </div></section>
+
+              <section class="scene-lane"><div class="scene-head"><strong>自媒体／独立创作</strong><small>低门槛试稿、快速出片与个人表达</small><span class="scene-count">8人</span></div><div class="scene-stack">
+                <article class="scene-person"><div class="scene-person-top"><strong>嘉弈</strong><span class="scene-state">已反馈</span></div><p>部分生图模型不可用、AI响应慢；15秒720P约60分钟，音频不清晰且有回声。</p><div class="scene-evidence single"><a href="assets/jiayi-feedback.png" target="_blank" rel="noopener"><img src="assets/jiayi-feedback.png" alt="嘉弈测试反馈截图"><span>原始反馈</span></a></div></article>
+                <article class="scene-person"><div class="scene-person-top"><strong>倪海敬</strong><span class="scene-state">已反馈</span></div><p>服装遗漏、数量错误、多余物体和人脸模糊反复出现；建议优化提示词结构与清晰度节点。</p><div class="scene-evidence single"><a href="assets/nihaijing-siltok24.png" target="_blank" rel="noopener"><img src="assets/nihaijing-siltok24.png" alt="倪海敬siltok24测试异常截图"><span>异常截图</span></a></div></article>
+                <article class="scene-person"><div class="scene-person-top"><strong>碳水大王</strong><span class="scene-state">已反馈</span></div><p>Tailscale路由配置曾阻塞连接；短剧空间效果一般，限制级画面与声音未生成成功。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>烦同学</strong><span class="scene-state">未反馈</span></div><p>账号已分发，尚未回收测试反馈。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>耳朵</strong><span class="scene-state">未反馈</span></div><p>账号已分发，尚未回收测试反馈。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>蔡</strong><span class="scene-state">未测试</span></div><p>意向用户尚未分发，目前断联。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>小熊</strong><span class="scene-state">未测试</span></div><p>意向用户尚未分发，目前断联。</p></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>汤姆喵喵</strong><span class="scene-state">未测试</span></div><p>意向用户尚未分发，目前断联。</p></article>
+              </div></section>
+
+              <section class="scene-lane"><div class="scene-head"><strong>ComfyUI／智能体／研发</strong><small>工作流、API、Agent与自动化生产</small><span class="scene-count">3人</span></div><div class="scene-stack">
+                <article class="scene-person"><div class="scene-person-top"><strong>小皓</strong><span class="scene-state">已反馈</span></div><p>长任务掉线、1080P观感偏低；同时提供Codex接管ComfyUI的完整命令文档，希望进一步实现云端持续自动跑视频。</p><div class="scene-evidence"><a class="scene-document" href="assets/xiaohao-codex-comfyui-red-boat-handoff.docx" target="_blank" rel="noopener"><div class="scene-document-icon">DOCX</div><div class="scene-document-copy"><strong>Codex × ComfyUI</strong><small>红纸船30秒命令文档</small></div></a><a href="assets/xiaohao-muse-cloud-1k-case.mp4" target="_blank" rel="noopener"><img src="assets/xiaohao-muse-cloud-1k-case.jpg" alt="小皓Muse云端1K案例封面"><span>Muse案例</span></a></div></article>
+                <article class="scene-person"><div class="scene-person-top"><strong>AI设计张张</strong><span class="scene-state">已反馈</span></div><p>FLUX质量和提示词遵循不足；其H3双采与Qwen 2.1工作流更稳定，但仍需租用云端机器。</p><div class="scene-evidence single"><a href="assets/design-zhangzhang-workflow-case.jpg" target="_blank" rel="noopener"><img src="assets/design-zhangzhang-workflow-case.jpg" alt="AI设计张张自建工作流案例封面"><span>工作流案例</span></a></div></article>
+                <article class="scene-person untested"><div class="scene-person-top"><strong>林子AIGC</strong><span class="scene-state">未测试</span></div><p>意向用户尚未分发，目前断联。</p></article>
+              </div></section>
+
+              <section class="scene-lane"><div class="scene-head"><strong>教学产品／基础性能</strong><small>教学使用、基础生成能力与运行稳定性</small><span class="scene-count">1人</span></div><div class="scene-stack">
+                <article class="scene-person testing"><div class="scene-person-top"><strong>荣图</strong><span class="scene-state">测试中</span></div><p>用于教学产品，当前测试基础性能；重点回收模型可用性、任务成功率、耗时、稳定性、基础画质和教学上手成本。</p></article>
+              </div></section>
+            </div>
+          </div>
+        </div>
+        <div class="expert-review" id="expert-review">
+          <div class="expert-head"><strong>辛导｜非测试专家评审</strong><span>基于已生成样片给出专业意见 · 不计入10份有效测试反馈</span></div>
+          <div class="expert-grid">
+            <div class="expert-case">
+              <h4>样片一｜影调与视听语言</h4>
+              <div class="expert-case-layout">
+                <figure class="expert-media">
+                  <video controls preload="metadata" playsinline poster="assets/xindao-reviewed-sample-tone.jpg" src="assets/xindao-reviewed-sample-tone.mp4"></video>
+                  <figcaption>辛导实际评审的送审样片 · 10.16秒 · 768×1344</figcaption>
+                </figure>
+                <div class="expert-copy"><span class="expert-object-label">评审对象：AI Station 生成样片</span><p><strong>不足：</strong>AI感较重、缺少影调感、视听语言单一。<br><strong>可取：</strong>景深表现较好，人物微表情可用，尤其保留了眨眼细节。辛导同时提供其电影感成品作为影调参照。</p><span class="case-location">送审样片＋影调参考归入：业务可用质量</span></div>
+              </div>
+            </div>
+            <div class="expert-case">
+              <h4>样片二｜动画规律与人物结构</h4>
+              <div class="expert-case-layout">
+                <figure class="expert-media">
+                  <video controls preload="metadata" playsinline poster="assets/xindao-reviewed-sample-animation.jpg" src="assets/xindao-reviewed-sample-animation.mp4"></video>
+                  <figcaption>辛导实际评审的送审样片 · 15.11秒 · 736×1312</figcaption>
+                </figure>
+                <div class="expert-copy"><span class="expert-object-label">评审对象：AI Station 生成样片</span><p><strong>不足：</strong>整体达不到预期，动作缺少动画规律，人物手指出现结构崩坏。辛导建议对照其分镜与成片案例，检查关键姿态、运动节奏和镜头衔接。</p><span class="case-location">送审样片＋分镜参考归入：多镜头与角色一致性</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="task-board" id="task-completion">
+          <div class="subhead"><h3>创作任务与完成度看板</h3><span class="note">完成度按“能否完成用户原本的创作任务”判断，不等同于功能是否运行</span></div>
+          <div class="task-wrap">
+            <table class="task-table">
+              <thead><tr><th>用户</th><th>想完成的创作任务</th><th>AI Station已提供的帮助与完成度</th><th>当前阻碍</th><th>用户真正需要</th><th>下一步成功判据</th></tr></thead>
+              <tbody>
+                <tr><td>Carl<br><span class="completion blocked">未达交付</span></td><td>生成可直接投流的电商广告图、动作图和复杂场景视频。</td><td>完成多类图片与视频生成测试，能够暴露文字、结构、颜色和场景融合问题。</td><td>中文文字、商品颜色、人物结构及多人场景清晰度不稳定；部分模型提交后才提示不可用。</td><td>商品与品牌信息必须准确；生成前知道模型能否运行；批量结果中要有稳定的可投放比例。</td><td>建立同商品、同提示词测试集；统计首轮可用率、文字正确率、商品一致率及每条可用素材成本。</td></tr>
+                <tr><td>日本短剧公司<br><span class="completion partial">专业生产 · 部分完成</span></td><td>以连续镜头完成30分钟以上短剧项目，并保持人物、场景和写实质感。</td><td>可以完成单段15秒视频生成和同提示词效果比较。</td><td>单段接近10分钟；提示词还原与超写实质感不足；现有单任务流程无法管理长项目。</td><td>不仅是“更快”，而是整部项目可管理：资产复用、尾帧续做、镜头连续、耗时可预测。</td><td>用完整3—5镜小任务验证角色一致率、单镜可用率、平均返工次数和总项目耗时；可接受时长需回访确认。</td></tr>
+                <tr><td>李哲<br><span class="completion partial">专业生产 · 局部可交付</span></td><td>批量生产AI漫剧、游戏或广告视频，并进入AE／PR后期流程。</td><td>竖屏480P局部达到交付级；已验证不同设备、分辨率和模式的速度差异。</td><td>ETA偏差大、横屏及人脸细节弱、文字差、失败后缺少指引，尚无批量队列。</td><td>按急活、精品、批量三个档位选择速度与质量；任务可排队；结果能无损进入后期。</td><td>分别记录三档P50/P95耗时、ETA误差、可用率、每条返工次数及导入AE／PR所需人工分钟数。</td></tr>
+                <tr><td>嘉弈<br><span class="completion blocked">流程受阻</span></td><td>低门槛完成自媒体图片和15秒视频，生成后即可发布或轻剪辑。</td><td>完成基础生图、生视频和音频链路测试。</td><td>模型不可用、AI响应慢；15秒720P约60分钟；音频不清晰且有回声。</td><td>默认选项必须可运行；等待时间符合轻量创作节奏；音画达到基本发布标准。</td><td>统计新手首次成功率、完成一条内容总时长、错误自助解决率和音频主观通过率；可接受时长需回访。</td></tr>
+                <tr><td>白总·沈阳<br><span class="completion validated">完成性能验证</span></td><td>通过API批量提交视频任务，稳定获取结果并比较不同设备的生产效率。</td><td>已完成5070／5090及480P／720P等多组性能测试，形成控变量证据。</td><td>5070请求超时、耗时波动；缺少API、进度查询和失败重试；理想产能不等于可用成片产能。</td><td>稳定、可计算的批量生产系统：知道一天能交付多少条合格视频，以及失败会损失多少时间和算力。</td><td>以100条任务验证成功率、自动重试率、P95耗时、合格成片数、单位合格视频成本和人工干预次数。</td></tr>
+                <tr><td>白总·电商<br><span class="completion partial">基础链路完成</span></td><td>围绕商品与人物资产，按项目持续生产多分镜电商内容。</td><td>默认界面对新手友好，已完成基础生成和流程体验。</td><td>参数重置、资产重复上传、历史结果分散；缺少分镜控制、自动拼接和高级工作流入口。</td><td>项目上下文必须被保存：商品、人物、声音、场景、参数和版本可以复用，并支持专业控制。</td><td>验证跨项目资产复用率、重复上传次数、完成一组多分镜素材的点击数／人工时长和版本追溯成功率。</td></tr>
+                <tr><td>碳水大王<br><span class="completion partial">连接已解决</span></td><td>生成需要精细控制的短剧画面、声音和特定题材内容。</td><td>Tailscale路由问题通过accept-routes配置解决，已恢复设备连接。</td><td>空间与场景效果一般；题材边界不清楚，限制级画面和声音未生成成功。</td><td>连接配置自动化；明确能生成什么、不能生成什么；允许内容在合规边界内保持创作控制。</td><td>首次联网成功率、自动诊断率、场景还原通过率；产品先定义内容安全边界，再决定是否研发。</td></tr>
+                <tr><td>小皓<br><span class="completion partial">方法已验证</span></td><td>让AI接管ComfyUI，持续执行分镜、生成、质检、返工和成片任务。</td><td>已提供《雨后微光》命令文档与Muse云端样片，证明工作流方法和目标形态清晰；新版UI获得正向评价。</td><td>长任务掉线、云端资源有限；1080P观感偏低；自动化仍依赖Codex或外部AI，产品内没有闭环。</td><td>真正需求不是“接入Muse”，而是无人值守任务编排：状态持久化、自动续跑、失败重试、质检和结果回收。</td><td>连续运行24小时的完成率、断线恢复率、自动重试成功率、人工干预次数、每条合格视频成本及质量通过率。</td></tr>
+                <tr><td>倪海敬<br><span class="completion blocked">未达可用</span></td><td>独立完成角色、世界观图片和清晰可用的视频镜头。</td><td>完成多个模型和任务的基础测试，并给出提示词结构与Sigma节点建议。</td><td>服装遗漏、数量错误、多余物体、人脸模糊重复出现；部分测试缺少参考图。</td><td>核心主体、数量和服装不能漂移；失败后能够判断是输入、模型还是工作流问题。</td><td>固定测试集统计主体完整率、数量正确率、人脸可辨率、重复生成次数，并对Sigma方案做A/B验证。</td></tr>
+                <tr><td>AI设计张张<br><span class="completion validated">完成方案对比</span></td><td>用成熟工作流一键生成遵循提示词的图片和视频，并控制云端算力成本。</td><td>已用自建H3双采、Qwen 2.1和内置提示词工作流形成对照案例。</td><td>Siltok的FLUX质量和提示词遵循不足；用户怀疑模型或工作流配置；自建方案仍需租云机器。</td><td>稳定、透明、可复用的最佳实践，而不是单纯增加模型：推荐工作流、参数可见、允许导入，并能估算算力成本。</td><td>同提示词、同素材对比提示词遵循率、首轮可用率、重生成次数、单条合格素材成本和云端月度费用。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="subhead"><h3>当前适配结论</h3><span class="note">适配度针对“当前版本能否完成该场景任务”，不是用户价值高低</span></div>
+        <div class="fit-grid">
+          <article class="fit-card"><div class="fit-card-top"><h4>ComfyUI／智能体熟练用户</h4><span class="fit-level high">中高适配</span></div><p><strong>适合：</strong>本地工作流探索、模型试验、可人工介入的任务。<br><strong>优势：</strong>本地资产、工作流开放、设备信息可见。<br><strong>差距：</strong>无人值守、API、持久状态与失败恢复尚未闭环。</p></article>
+          <article class="fit-card"><div class="fit-card-top"><h4>自媒体／独立创作者</h4><span class="fit-level mid">中等适配</span></div><p><strong>适合：</strong>轻量试稿、单段生成和允许重试的内容。<br><strong>优势：</strong>默认界面较容易进入。<br><strong>差距：</strong>默认模型可用性、等待时间、音画质量和失败指引。</p></article>
+          <article class="fit-card"><div class="fit-card-top"><h4>电商／广告／文旅素材</h4><span class="fit-level mid">条件适配</span></div><p><strong>适合：</strong>创意草稿、低风险变体和内部预览。<br><strong>优势：</strong>本地素材与长期高频生产潜力。<br><strong>差距：</strong>商品、文字、颜色准确性以及资产／项目／批量管理。</p></article>
+          <article class="fit-card"><div class="fit-card-top"><h4>AI短剧／漫剧／影游</h4><span class="fit-level mid">条件适配</span></div><p><strong>适合：</strong>单镜探索、预演和竖屏低分辨率局部交付。<br><strong>差距：</strong>连续项目、角色一致性、多镜头控制、队列与耗时可预测性。</p></article>
+          <article class="fit-card"><div class="fit-card-top"><h4>影视／CG专业成片</h4><span class="fit-level low">当前低适配</span></div><p><strong>适合：</strong>概念探索和前期预演。<br><strong>暂不适合：</strong>直接承担最终成片。<br><strong>差距：</strong>影调、动画规律、手部结构、镜头语言和专业后期衔接。</p></article>
+          <article class="fit-card"><div class="fit-card-top"><h4>教学／基础性能</h4><span class="fit-level pending">测试中</span></div><p><strong>潜在适合：</strong>标准生成流程演示。<br><strong>尚需验证：</strong>同流程复现率、模型稳定性、设备要求、错误自助率和教学上手时长。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="board needs" id="needs">
+      <div class="board-head"><div class="board-no">03</div><div><h2>需求分类图谱</h2><div class="board-sub">反馈与需求分开：每条需求可编辑，并通过案例查看用户原话、实测现象和证据边界</div></div><span class="tone-chip">需求结构</span></div>
+      <div class="board-body">
+        <div class="need-toolbar"><span>编辑内容保存在当前浏览器；案例证据与需求判断分开呈现。</span><button class="edit-toggle" id="needsEditToggle" type="button">编辑需求</button></div>
+        <div class="need-map">
+          <div class="need-lane common"><div class="lane-head"><strong>全用户共性需求</strong><span>基础体验与核心链路</span></div><div class="need-stack">
+            <div class="need" data-need-id="quality"><div class="need-main"><div class="need-copy"><strong>业务可用质量</strong><small>人物、文字、结构、清晰度、影调与微表情达到交付底线</small></div><button class="status true" type="button">真需求</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="quality">查看案例 6 · 含视频</button></div></div>
+            <div class="need" data-need-id="stability"><div class="need-main"><div class="need-copy"><strong>任务稳定与恢复</strong><small>掉线、超时、失败后可恢复</small></div><button class="status true" type="button">真需求</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="stability">查看案例 3</button></div></div>
+            <div class="need" data-need-id="prompt"><div class="need-main"><div class="need-copy"><strong>提示词与结构遵循</strong><small>数量、空间、主体和动作稳定响应</small></div><button class="status true" type="button">真需求</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="prompt">查看案例 4</button></div></div>
+            <div class="need" data-need-id="time"><div class="need-main"><div class="need-copy"><strong>进度与耗时可信</strong><small>明确等待时间、资源消耗和放弃阈值</small></div><button class="status true" type="button">真需求</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="time">查看案例 3</button></div></div>
+            <div class="need" data-need-id="device"><div class="need-main"><div class="need-copy"><strong>设备自动适配</strong><small>自动推荐可运行模型、工作流与安全参数</small></div><button class="status true" type="button">真需求</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="device">查看案例 2</button></div></div>
+          </div></div>
+          <div class="need-lane segment"><div class="lane-head"><strong>分类个性化需求</strong><span>特定行业与使用深度</span></div><div class="need-stack">
+            <div class="need" data-need-id="knowledge"><div class="need-main"><div class="need-copy"><strong>本地知识资产</strong><small>商品资料、历史文案与风格可检索复用</small></div><button class="status true" type="button">底层为真</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="knowledge">查看案例 2</button></div></div>
+            <div class="need" data-need-id="template"><div class="need-main"><div class="need-copy"><strong>模板化工作流</strong><small>商品展示、口播、图转视频、短剧分镜及高级自定义入口</small></div><button class="status true" type="button">底层为真</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="template">查看案例 3 · 含视频</button></div></div>
+            <div class="need" data-need-id="batch"><div class="need-main"><div class="need-copy"><strong>低成本批量生产</strong><small>队列、断点续作、失败重试、缓存复用</small></div><button class="status true" type="button">真需求</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="batch">查看案例 3</button></div></div>
+            <div class="need" data-need-id="consistency"><div class="need-main"><div class="need-copy"><strong>多镜头与角色一致性</strong><small>短剧、漫剧、动画规律与专业生产场景</small></div><button class="status pending" type="button">待验证</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="consistency">查看案例 5 · 含视频</button></div></div>
+            <div class="need" data-need-id="hybrid"><div class="need-main"><div class="need-copy"><strong>端云可选协同</strong><small>按质量、价格、隐私和任务时长选择算力</small></div><button class="status pending" type="button">待验证</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="hybrid">查看案例 2</button></div></div>
+          </div></div>
+          <div class="need-lane point"><div class="lane-head"><strong>纯点状需求</strong><span>不直接进入路线图</span></div><div class="need-stack">
+            <div class="need" data-need-id="portable"><div class="need-main"><div class="need-copy"><strong>资产可迁移</strong><small>提示词、模板、角色和风格可导出</small></div><button class="status pending" type="button">待验证</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="portable">查看案例 1</button></div></div>
+            <div class="need" data-need-id="muse"><div class="need-main"><div class="need-copy"><strong>Muse类AI与API调度</strong><small>云端代理调用合适API并持续运行视频任务</small></div><button class="status pending" type="button">待验证</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="muse">查看案例 2 · 含视频</button></div></div>
+            <div class="need" data-need-id="sigma"><div class="need-main"><div class="need-copy"><strong>Sigma节点</strong><small>方案指定，不等于底层需求</small></div><button class="status pending" type="button">观察</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="sigma">查看案例 1</button></div></div>
+            <div class="need" data-need-id="aepr"><div class="need-main"><div class="need-copy"><strong>AE / PR本地联动</strong><small>专业场景，尚无规模证据</small></div><button class="status pending" type="button">观察</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="aepr">查看案例 1</button></div></div>
+            <div class="need" data-need-id="violent"><div class="need-main"><div class="need-copy"><strong>高血腥画面与声音</strong><small>诉求存在，但受安全边界限制</small></div><button class="status boundary" type="button">不纳入</button></div><div class="need-footer"><button class="case-trigger" type="button" data-case-id="violent">查看案例 1</button></div></div>
+          </div></div>
+        </div>
+
+        <div class="subhead" id="internal-feedback"><h3>内部人员反馈与真需求校验</h3><span class="note">内部自测用于补强证据；技术方案、运营规则和宣传结论不直接计作用户需求</span></div>
+        <div class="internal-summary">
+          <div class="internal-stat"><strong>37</strong><span>反馈表记录总数，包含用户反馈、内部转述、自测和处理记录</span></div>
+          <div class="internal-stat"><strong>9</strong><span>明确标注为内部体验、内部发现、测试或流程判断的记录</span></div>
+          <div class="internal-stat"><strong>6</strong><span>已由用户问题与内部复现交叉证实的底层需求</span></div>
+          <div class="internal-stat"><strong>4类</strong><span>属于实现方案或内部治理，不应伪装成用户真需求</span></div>
+        </div>
+        <div class="internal-proof-board">
+          <section class="internal-lane confirmed"><div class="internal-lane-head"><strong>用户反馈＋内部复现</strong><span>可以确认问题成立，并进入立即修复或产品定义。</span></div><div class="internal-stack">
+            <article class="internal-card"><div class="internal-card-top"><h4>长任务、主机与结果必须可恢复</h4><span class="internal-judgment">真需求</span></div><div class="internal-meta">石根洁／戴臻旸／王俊枭 · 多次复现</div><p><strong>内部证据：</strong>siltok13死机、24／23／6的frpc进程挂起、Speed出现NaN／Inf、旧服务一小时后清理结果。<br><strong>用户损失：</strong>三四分钟掉线一次、任务中断、26条任务全部丢失、生成结果无法下载。<br><strong>结论：</strong>用户要的是任务与结果的可靠保存，不是单纯“机器在线”。P0应覆盖心跳、断点、重试、结果保留和恢复。</p><div class="internal-evidence-links"><a class="internal-evidence-link" href="assets/internal-feedback/rec09_设备掉线截图.png" target="_blank" rel="noopener">设备掉线证据</a><a class="internal-evidence-link" href="assets/internal-feedback/rec37_s24.png" target="_blank" rel="noopener">主机异常证据</a></div></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>耗时与队列状态必须可信</h4><span class="internal-judgment">真需求</span></div><div class="internal-meta">戴臻旸／关凯文 · 内部计时＋用户反馈</div><p><strong>内部证据：</strong>界面显示约6分钟，实际从提交到拿到结果超过18分钟，排队场景约30分钟；另有H3运行98分钟超过Dash 30分钟轮询上限。<br><strong>用户证据：</strong>15秒720P约60分钟明显阻塞创作，也有用户认为768P 15分钟偏慢但尚可接受。<br><strong>结论：</strong>“更快”是泛化表达，真需求是排队、推理、传输和预计完成时间可区分且可信；各场景时长底线仍需回访。</p><div class="internal-evidence-links"><a class="internal-evidence-link" href="assets/internal-feedback/rec06_排队耗时截图.png" target="_blank" rel="noopener">查看内部计时</a></div></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>提交前必须完成设备与参数校验</h4><span class="internal-judgment">真需求</span></div><div class="internal-meta">石根洁／戴臻旸／杨潇 · 设备实测</div><p><strong>内部证据：</strong>5070Ti提交1824×1024、15秒ref2va任务可能运行数小时，H3不推荐1080P；LTX参考视频与Boogu-Edit图生图当时不受支持。<br><strong>用户损失：</strong>用户看到“卡死”、提交后才报错，无法判断是系统故障、模型限制还是任务仍在运行。<br><strong>结论：</strong>真需求是自动识别设备与模型边界，在提交前给出可运行参数、预计耗时和降级选项；“全部限死768P”只是阶段性方案。</p><div class="internal-evidence-links"><a class="internal-evidence-link" href="assets/internal-feedback/inc1_1.png" target="_blank" rel="noopener">大任务超时证据</a></div></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>质量标准必须按创作场景拆分</h4><span class="internal-judgment">真需求</span></div><div class="internal-meta">关凯文／石根洁／杨潇 · 内部样片与专家交叉判断</div><p><strong>内部证据：</strong>480P人脸模糊但竖屏局部可交付，横屏细节更差；LoRA出现油腻、高动态模糊与虚影；短剧测试出现伪字、物理动作和建筑问题；动漫测试出现角色乱入、物品不一致和动作模糊。<br><strong>外部印证：</strong>电商、短剧、独立创作及CG导演均反馈文字、结构、影调、动作或人物一致性不足。<br><strong>结论：</strong>质量是真需求，但不能用一个“高清”指标验收。需要电商、漫剧、影视预演分别定义首轮可用率和错误类型。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>报错必须说明原因并支持自助恢复</h4><span class="internal-judgment">真需求</span></div><div class="internal-meta">石根洁／沈游人／王鹏 · 故障定位记录</div><p><strong>内部证据：</strong>生图同步请求超时、图片编码超过Speed 16MB、代理与防火墙、参考输入上限等底层原因均被定位。<br><strong>用户看到：</strong>“系统繁忙”“已停止生成”“无法确认主机可执行任务”等泛化提示。<br><strong>结论：</strong>用户真正需要的是知道失败原因、数据是否保留、是否可重试以及推荐替代参数；改异步队列只是实现方式。</p><div class="internal-evidence-links"><a class="internal-evidence-link" href="assets/internal-feedback/rec08_生图失败截图1.png" target="_blank" rel="noopener">查看超时报错</a></div></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>专业批量生产需要任务接口</h4><span class="internal-judgment">分类真需求</span></div><div class="internal-meta">关凯文整理 · 56条生成记录＋专业用户需求</div><p><strong>内部证据：</strong>14个案例、两组提示词形成56条记录后，团队发现失败率、重试损耗和进度无法系统统计。<br><strong>用户证据：</strong>白总需要批量提交、查进度、取结果和失败重试；小皓、李哲希望持续排队与无人值守。<br><strong>结论：</strong>API／队列是专业生产用户的真需求，不是29名用户的全量共性需求；先定义状态、幂等、并发和结果保留。</p></article>
+          </div></section>
+
+          <section class="internal-lane validate"><div class="internal-lane-head"><strong>问题可能成立，仍需用户验证</strong><span>内部发现可以立项验证，不能独立决定产品形态和优先级。</span></div><div class="internal-stack">
+            <article class="internal-card"><div class="internal-card-top"><h4>远程桌面下Dash操作卡顿</h4><span class="internal-judgment">待验证</span></div><div class="internal-meta">许佳美 · 内部体验</div><p>同一台电脑本地安装时流畅，远程桌面环境明显卡顿。需要拆分网络时延、远程桌面帧率和Dash自身渲染性能，并找3类真实远程环境复测后再判断是否为产品性能问题。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>提示词帮助应内置到什么程度</h4><span class="internal-judgment">形态待验</span></div><div class="internal-meta">沈游人 · 基于用户看不懂H3指南</div><p>底层需求是提升首次成功率和减少提示词试错。Codex指南、Skill、模板、一键改写或结构化导演台都是候选方案，不能因为内部提出“做指南”就直接确定产品形态。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>交互细节与结果组织</h4><span class="internal-judgment">低覆盖验证</span></div><div class="internal-meta">关凯文／石根洁 · 单点反馈</div><p>包括全屏视频不能用空格暂停、移动文件夹后对话中结果消失、“重新获取”后界面异常。问题真实但覆盖率未知，应通过任务回放和可用性测试判断是否影响核心完成率。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>价格与付费底线</h4><span class="internal-judgment">证据不足</span></div><div class="internal-meta">当前内部记录未提供可验证价格结论</div><p>表格主要记录性能、稳定性与质量，没有用户愿付价格、月产量、失败成本和人工盯守成本。当前只能确认“单位合格内容总成本”值得验证，不能据此得出定价或本地一定更便宜。</p></article>
+          </div></section>
+
+          <section class="internal-lane not-need"><div class="internal-lane-head"><strong>内部方案或治理，不当作用户需求</strong><span>这些工作可能必要，但不能用于虚增需求覆盖率。</span></div><div class="internal-stack">
+            <article class="internal-card"><div class="internal-card-top"><h4>强制限制到768P／15秒</h4><span class="internal-judgment">阶段方案</span></div><p>它解决当前设备能力上限，不是用户的最终需求。真正需求是自动适配、透明降级和可预期完成。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>改为异步Bonnet队列</h4><span class="internal-judgment">技术实现</span></div><p>异步、队列和进度条是解决超时与状态透明的实现路径，用户需求仍是稳定提交、可见进度和失败可恢复。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>5分钟报警与统一更新服务</h4><span class="internal-judgment">运维治理</span></div><p>报警、进程拉起和版本统一是内部可靠性保障，不单独算一条用户需求，但应作为稳定性验收的支撑条件。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>“比ComfyUI快10%—20%”</h4><span class="internal-judgment">未确认结论</span></div><p>杨潇指出并发测试导致LoRA对比数据有误，需要重跑。该表述属于对外性能结论，不是真需求；未完成同设备、同模型、同参数控变量测试前不应写入定位结论。</p></article>
+            <article class="internal-card"><div class="internal-card-top"><h4>Badcase池与默认跟进人</h4><span class="internal-judgment">内部流程</span></div><p>持续收集质量案例、指定Dash／Speed跟进人是正确研发机制，但它是需求治理方法，不是用户希望产品新增的功能。</p></article>
+          </div></section>
+        </div>
+        <div class="internal-rule"><strong>真需求判定规则：</strong>同时满足“对应真实创作任务”“造成时间、质量、成本或交付损失”“可由用户反馈或内部重复复现验证”时，才进入真需求。内部提出的节点、架构、限值、报警和工作流名称只作为候选方案。</div>
+
+        <div class="spec-section" id="specification">
+        <div class="subhead"><h3>真需求规格化｜从用户表达转成产品与研发指标</h3><span class="note">已知数据直接写入；尚无用户底线的指标标记为待回访，不替用户设定答案</span></div>
+        <div class="spec-toolbar"><span>标题、判断标签、字段名称和规格内容均可编辑；修改自动保存在当前浏览器。</span><div class="spec-toolbar-actions"><span class="spec-save-state" id="specSaveState">未编辑</span><button class="spec-reset" id="specReset" type="button">恢复默认</button><button class="edit-toggle" id="specEditToggle" type="button">编辑规格</button></div></div>
+        <div class="spec-grid">
+          <article class="spec-card" data-spec-id="time"><div class="spec-top"><strong>时间与吞吐</strong><span class="metric-chip">真需求 · 待量化底线</span></div><dl><dt>真正需要</dt><dd>知道何时能拿到结果，并让等待时间与任务价值匹配；急活、精品、批量不能使用同一速度标准。</dd><dt>用户证据</dt><dd>15秒接近10分钟被认为偏久；15秒720P约60分钟明显阻塞创作；另有用户认为768P约15分钟偏慢但仍可接受，说明底线因场景不同。</dd><dt>内部证据</dt><dd>界面显示约6分钟，实际超过18分钟，排队场景约30分钟；H3任务曾运行98分钟并超过Dash 30分钟轮询上限。</dd><dt>必须拆分</dt><dd>排队时间、纯推理时间、上传／下载时间、单条耗时、批量吞吐、ETA误差、用户放弃阈值。</dd><dt>研发指标</dt><dd>按设备×模型×分辨率×时长记录P50/P95耗时；ETA误差率；每天可完成任务数；等待超时与主动取消率。</dd><dt>下一步</dt><dd>向短剧、自媒体、专业生产三类用户分别询问“最快期待、可接受、不可接受”三档时间。</dd></dl></article>
+          <article class="spec-card" data-spec-id="quality"><div class="spec-top"><strong>质量与可交付率</strong><span class="metric-chip">真需求 · 先定义标准</span></div><dl><dt>真正需要</dt><dd>不是“分辨率数字更高”，而是人物、商品、文字、动作、声音和影调达到具体业务的最低交付线。</dd><dt>用户证据</dt><dd>文字错乱、商品变色、人物与手指崩坏、人脸模糊、影调不足、音频回声；专业用户认为部分结果无法直接交付。</dd><dt>内部证据</dt><dd>竖屏480P局部可交付但横屏细节更差；LoRA出现油腻和高动态虚影；短剧和动漫自测复现伪字、物理逻辑、角色乱入及物品一致性问题。</dd><dt>必须拆分</dt><dd>技术清晰度、主体完整、文字正确、颜色一致、提示词遵循、角色连续、动画规律、音频可用、业务审美。</dd><dt>研发指标</dt><dd>首轮可用率、盲评通过率、结构错误率、文字正确率、角色一致率、平均重生成次数、每条合格内容总耗时。</dd><dt>下一步</dt><dd>为电商、漫剧、影视各建一套固定Badcase与金标准，禁止用同一个“画质好”覆盖全部场景。</dd></dl></article>
+          <article class="spec-card" data-spec-id="cost"><div class="spec-top"><strong>价格与总生产成本</strong><span class="metric-chip">问题成立 · 价格证据不足</span></div><dl><dt>真正需要</dt><dd>用户要比较的不是机器售价或单次云费用，而是“交付一条合格内容”所需的全部成本。</dd><dt>用户证据</dt><dd>AI设计张张需要租云机器；小皓需要持续云端算力；本地长期高频可能有成本优势，但低频用户云端更灵活。</dd><dt>内部证据</dt><dd>当前37条记录没有愿付价格、月产量和单位合格内容成本，不能从内部判断直接推出定价结论。</dd><dt>必须拆分</dt><dd>硬件摊销、电费、云端调用费、失败重跑费、存储与传输、人工盯守时间、等待造成的交付损失。</dd><dt>产品指标</dt><dd>每条任务成本、每条合格素材成本、月度总成本、失败浪费占比、人工干预分钟数、端云切换后的成本差。</dd><dt>下一步</dt><dd>不先定统一价格结论；用低频／高频和本地／云端四组真实任务测算，再访谈用户愿付价格区间。</dd></dl></article>
+          <article class="spec-card" data-spec-id="stability"><div class="spec-top"><strong>稳定性与失败恢复</strong><span class="metric-chip">真需求 · 立即修复</span></div><dl><dt>真正需要</dt><dd>长任务可以放心离开电脑；失败后保留输入、参数、进度和已完成结果，不必从头再来。</dd><dt>用户证据</dt><dd>长任务频繁掉线、任务中断、26条结果丢失、生成完成但无法下载、失败后没有继续指引。</dd><dt>内部证据</dt><dd>siltok13死机、frpc进程挂起、Speed计算NaN／Inf、旧服务结果保留仅1小时、同步生图请求超时均已定位。</dd><dt>必须拆分</dt><dd>提交成功、运行不中断、断点保存、自动重试、错误可定位、结果可回收、项目状态可恢复。</dd><dt>研发指标</dt><dd>任务成功率、连续24小时完成率、断线恢复率、自动重试成功率、平均恢复时间、数据／结果丢失率。</dd><dt>下一步</dt><dd>先修复已复现故障，再建设批量和无人值守；否则自动化只会扩大失败规模。</dd></dl></article>
+          <article class="spec-card" data-spec-id="compatibility"><div class="spec-top"><strong>设备与模型兼容</strong><span class="metric-chip">真需求 · 产品规则</span></div><dl><dt>真正需要</dt><dd>用户不研究显存、量化和节点，也能在提交前知道什么能跑、预计多慢、质量会降到什么程度。</dd><dt>用户证据</dt><dd>模型提交后才提示不可用；Tailscale路由需要人工配置；用户质疑模型／工作流组合；高分辨率与多参考图存在失败边界。</dd><dt>内部证据</dt><dd>5070Ti运行1824×1024、15秒ref2va可能耗时数小时；H3不推荐1080P；LTX参考视频与Boogu-Edit图生图存在明确能力限制。</dd><dt>必须拆分</dt><dd>硬件检测、模型可用矩阵、显存预估、参数安全范围、网络依赖、质量降级提示、替代方案推荐。</dd><dt>研发指标</dt><dd>提交前拦截率、错误推荐率、首次运行成功率、OOM／超时率、用户手动查配置次数。</dd><dt>下一步</dt><dd>先发布经过验证的设备×模型×参数白名单；未经验证的组合明确标识实验状态。</dd></dl></article>
+          <article class="spec-card" data-spec-id="control"><div class="spec-top"><strong>创作控制与一致性</strong><span class="metric-chip">真需求 · 场景化</span></div><dl><dt>真正需要</dt><dd>不同用户需要不同控制深度：新手需要可靠默认值，专业用户需要逐镜、角色、商品、动作、运镜和参数控制。</dd><dt>用户证据</dt><dd>单个大提示词难控制多镜头；角色、服装、数量和动作漂移；专业用户希望导入ComfyUI工作流。</dd><dt>内部证据</dt><dd>短剧测试复现镜头运动不足、物理逻辑错误；动漫测试复现角色乱入、物品一致性失败及没有白模时人物变化。</dd><dt>必须拆分</dt><dd>提示词遵循、主体身份锁定、关键帧、逐镜设置、参数展开、工作流导入、跨镜头资产复用。</dd><dt>研发指标</dt><dd>主体一致率、属性保持率、镜头计划完成率、参数可复现率、从失败到修正的平均迭代次数。</dd><dt>下一步</dt><dd>同一能力提供“简单模板”和“专业展开”两层入口，避免用单一界面同时服务所有人。</dd></dl></article>
+          <article class="spec-card" data-spec-id="automation"><div class="spec-top"><strong>批量自动化与无人值守</strong><span class="metric-chip">分类真需求 · 分阶段实现</span></div><dl><dt>真正需要</dt><dd>任务列表能持续执行，系统自动选择资源、提交下一段、质检、重试并回收结果；Muse或Codex只是可能方案。</dd><dt>用户证据</dt><dd>小皓希望云端持续跑；李哲希望“挂清单→排队→自动生产”；白总需要API提交、查询和重试。</dd><dt>内部证据</dt><dd>56条生成记录的测试无法稳定统计报错率与重试损耗，暴露出任务状态、接口和质量回收机制缺失。</dd><dt>必须拆分</dt><dd>队列、并发、状态机、API、断点续作、失败策略、自动质检、通知、预算上限和人工接管。</dd><dt>研发指标</dt><dd>无人值守任务占比、人工干预次数、自动重试成功率、队列吞吐、预算超限率、最终合格结果回收率。</dd><dt>下一步</dt><dd>顺序为稳定恢复→队列→API→自动质检→智能调度，不能直接从单任务跳到“无限跑”。</dd></dl></article>
+          <article class="spec-card" data-spec-id="assets"><div class="spec-top"><strong>资产与项目连续性</strong><span class="metric-chip">真需求 · P1验证</span></div><dl><dt>真正需要</dt><dd>用户可以从上次项目继续工作，复用人物、商品、声音、场景、提示词、参数和已通过镜头。</dd><dt>用户证据</dt><dd>素材需要重复上传、历史任务按会话分散、长项目依赖自由画布、用户要求项目／商品／版本管理。</dd><dt>内部证据</dt><dd>现有内部记录只确认移动文件后对话结果消失，尚不足以确定完整资产库范围和信息架构。</dd><dt>必须拆分</dt><dd>资产分类、语义检索、用途标注、项目文件夹、版本关系、提示词与参数追溯、导入导出。</dd><dt>研发指标</dt><dd>资产复用率、重复上传次数、检索命中率、版本追溯成功率、恢复项目所需时间、跨项目误用率。</dd><dt>下一步</dt><dd>先验证2—3个高频资产类型和项目结构，不直接建设无边界“本地知识库”。</dd></dl></article>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="board decisions" id="decisions">
+      <div class="board-head"><div class="board-no">04</div><div><h2>产品与研发决策看板</h2><div class="board-sub">先按决策性质分流，再在通道内排序；避免把已确认故障、需求假设和产品规则混成一张P0／P1清单</div></div><span class="tone-chip">三条决策通道</span></div>
+      <div class="board-body">
+        <div class="decision-channels" id="decisionGrid">
+          <section class="decision-lane fix"><div class="decision-lane-head"><strong>立即修复</strong><span>已有可复现证据，直接阻断任务或造成结果丢失；先修复再扩展功能。</span></div><div class="decision-stack">
+            <article class="decision"><div class="decision-top"><h4>长任务稳定与恢复</h4><span class="coverage">5/10用户＋内部复现</span></div><p>覆盖掉线、死机、NaN／Inf、frpc中断、状态丢失、结果被清理、断点续作和结果回收。</p><div class="checks"><label class="check"><input type="radio" name="stability" checked>真</label><label class="check"><input type="radio" name="stability">假</label><label class="check"><input type="radio" name="stability">待验</label></div><div class="schedule"><span>完成标准：连续24小时任务可恢复且结果不丢</span><strong>P0</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>提交前兼容校验</h4><span class="coverage">3/10用户＋设备实测</span></div><p>生成前检查模型能力、显存、分辨率、时长、参考素材大小和网络条件，并给出预计耗时与降级建议。</p><div class="checks"><label class="check"><input type="radio" name="preflight" checked>真</label><label class="check"><input type="radio" name="preflight">假</label><label class="check"><input type="radio" name="preflight">待验</label></div><div class="schedule"><span>完成标准：不再把能力限制表现为卡死</span><strong>P0</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>参数持久化与失败指引</h4><span class="coverage">2/10用户＋多类内部故障</span></div><p>切页不重置参数；失败时把“系统繁忙”改为可行动信息：原因、数据是否保留、能否重试及推荐替代参数。</p><div class="checks"><label class="check"><input type="radio" name="guidance" checked>真</label><label class="check"><input type="radio" name="guidance">假</label><label class="check"><input type="radio" name="guidance">待验</label></div><div class="schedule"><span>完成标准：错误自助恢复率</span><strong>P0</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>ETA与队列透明</h4><span class="coverage">3/10用户＋内部计时</span></div><p>分开显示排队、推理、上传和下载时间；内部已复现“显示6分钟、实际18—30分钟”的偏差。</p><div class="checks"><label class="check"><input type="radio" name="eta" checked>真</label><label class="check"><input type="radio" name="eta">假</label><label class="check"><input type="radio" name="eta">待验</label></div><div class="schedule"><span>完成标准：P50／P95 ETA误差率</span><strong>P0／P1</strong></div></article>
+          </div></section>
+
+          <section class="decision-lane validate"><div class="decision-lane-head"><strong>验证后决策</strong><span>底层问题存在，但用户底线、覆盖率或实现路径尚不清楚；先完成任务验证。</span></div><div class="decision-stack">
+            <article class="decision"><div class="decision-top"><h4>各场景可接受时长</h4><span class="coverage">3/10 · 30%</span></div><p>分别回访短剧、自媒体和批量生产用户的最快期待、可接受时间与放弃阈值。</p><div class="checks"><label class="check"><input type="radio" name="time-floor">真</label><label class="check"><input type="radio" name="time-floor">假</label><label class="check"><input type="radio" name="time-floor" checked>待验</label></div><div class="schedule"><span>输出：分场景SLA草案</span><strong>本轮验证</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>质量底线与可用率</h4><span class="coverage">8/10用户＋内部样片</span></div><p>质量问题本身已确认；待验证的是不同场景的交付底线。用固定任务集量化人物、商品、文字、动作、影调、音频和一致性。</p><div class="checks"><label class="check"><input type="radio" name="quality-floor" checked>真</label><label class="check"><input type="radio" name="quality-floor">假</label><label class="check"><input type="radio" name="quality-floor">待验</label></div><div class="schedule"><span>输出：分场景首轮可用率与返工数</span><strong>本轮定义＋验证</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>价格与单位合格成本</h4><span class="coverage">2/10用户 · 内部无定价证据</span></div><p>测算本地与云端的硬件、电费、调用、失败重跑、人工盯守和交付延误成本，再访谈愿付价格。</p><div class="checks"><label class="check"><input type="radio" name="cost">真</label><label class="check"><input type="radio" name="cost">假</label><label class="check"><input type="radio" name="cost" checked>待验</label></div><div class="schedule"><span>输出：低频／高频成本模型＋价格区间</span><strong>P1验证</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>资产与项目复用</h4><span class="coverage">2/10 · 20%</span></div><p>先验证商品、人物、场景三类资产的复用频率、检索命中率和节省时间。</p><div class="checks"><label class="check"><input type="radio" name="knowledge" checked>真</label><label class="check"><input type="radio" name="knowledge">假</label><label class="check"><input type="radio" name="knowledge">待验</label></div><div class="schedule"><span>输出：MVP资产范围</span><strong>P1验证</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>无人值守与API价值</h4><span class="coverage">3/10 · 30%</span></div><p>验证24小时运行、自动续跑、质检、重试和回收是否显著减少人工，并比较Muse、Codex或自研调度路径。</p><div class="checks"><label class="check"><input type="radio" name="automation">真</label><label class="check"><input type="radio" name="automation">假</label><label class="check"><input type="radio" name="automation" checked>待验</label></div><div class="schedule"><span>输出：PoC与ROI</span><strong>P1验证</strong></div></article>
+          </div></section>
+
+          <section class="decision-lane define"><div class="decision-lane-head"><strong>先定义再研发</strong><span>如果没有统一边界和验收标准，研发完成后仍无法判断是否解决问题。</span></div><div class="decision-stack">
+            <article class="decision"><div class="decision-top"><h4>场景化质量标准</h4><span class="coverage">全产品</span></div><p>分别定义电商投放、漫剧、影视预演、自媒体发布的分辨率、结构、文字、审美和可用率标准。</p><div class="checks"><label class="check"><input type="radio" name="quality-definition">真</label><label class="check"><input type="radio" name="quality-definition">假</label><label class="check"><input type="radio" name="quality-definition" checked>待验</label></div><div class="schedule"><span>负责人：产品＋算法</span><strong>先定义</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>设备×模型×参数矩阵</h4><span class="coverage">全设备</span></div><p>明确每款设备可运行模型、推荐分辨率／时长／参考图数量、预计耗时、降级方案和实验组合。</p><div class="checks"><label class="check"><input type="radio" name="compat-definition">真</label><label class="check"><input type="radio" name="compat-definition">假</label><label class="check"><input type="radio" name="compat-definition" checked>待验</label></div><div class="schedule"><span>负责人：研发＋测试</span><strong>先定义</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>速度／质量／价格档位</h4><span class="coverage">全场景</span></div><p>定义急活、标准、精品、批量档位；每档公开预计耗时、质量能力、资源消耗和价格。</p><div class="checks"><label class="check"><input type="radio" name="tier-definition">真</label><label class="check"><input type="radio" name="tier-definition">假</label><label class="check"><input type="radio" name="tier-definition" checked>待验</label></div><div class="schedule"><span>负责人：产品＋商业化</span><strong>先定义</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>项目、恢复与API语义</h4><span class="coverage">生产链路</span></div><p>定义项目保存范围、任务状态、幂等提交、失败码、重试策略、并发限制、结果保留和服务等级。</p><div class="checks"><label class="check"><input type="radio" name="api-definition">真</label><label class="check"><input type="radio" name="api-definition">假</label><label class="check"><input type="radio" name="api-definition" checked>待验</label></div><div class="schedule"><span>负责人：产品＋后端</span><strong>先定义</strong></div></article>
+            <article class="decision"><div class="decision-top"><h4>内容安全与数据边界</h4><span class="coverage">全用户</span></div><p>明确限制级内容、数据去向、云端上传授权、日志留存和端云切换提示；未定义前不进入研发排期。</p><div class="checks"><label class="check"><input type="radio" name="safety-definition">真</label><label class="check"><input type="radio" name="safety-definition">假</label><label class="check"><input type="radio" name="safety-definition" checked>待验</label></div><div class="schedule"><span>负责人：产品＋合规</span><strong>先定义</strong></div></article>
+          </div></section>
+        </div>
+      </div>
+    </section>
+
+    <section class="board positioning" id="positioning">
+      <div class="board-head"><div class="board-no">05</div><div><h2>产品定位与三款机型实测对比</h2><div class="board-sub">只呈现飞书测试文档中已有硬件证据、完成样本和实际工作流记录</div></div><span class="tone-chip">定位与对标</span></div>
+      <div class="board-body">
+        <div class="position-cards">
+          <div class="position-card"><strong>端侧｜持续跑量与隐私</strong><ul><li>本地数据与敏感素材</li><li>要求不高的批量内容</li><li>长期高频使用具备潜在成本优势</li></ul></div>
+          <div class="position-card"><strong>云端｜高精尖与弹性</strong><ul><li>高质量最终交付</li><li>复杂模型与峰值算力</li><li>低频尝鲜按量付费更灵活</li></ul></div>
+          <div class="position-card"><strong>Siltok定位｜端云协同</strong><ul><li>端侧完成预览、基础生成和持续跑量</li><li>云端承担高画质和复杂任务</li><li>价格、数据去向与质量收益必须透明</li></ul></div>
+        </div>
+
+        <div class="subhead"><h3>1｜三款正式对比机型的硬件配置</h3><span class="note">Siltok 5090仅为临时复测节点，不作为第四款产品</span></div>
+        <div class="source-strip"><span><strong>证据来源：</strong>《MiniMax H3 产品官网与三端实测总结》修订 144</span><span>硬件配置＋实测记录</span></div>
+        <div class="compare-wrap">
+          <table class="compare">
+            <thead><tr><th>配置维度</th><th>Siltok AI Station</th><th>AINPCMax</th><th>AINPC 5090版</th></tr></thead>
+            <tbody>
+              <tr><td>CPU／平台</td><td>AMD 锐龙 7 9700X<br>ProArt B850-CREATOR WIFI NEO</td><td>AMD Ryzen AI Max+ 395<br>XDNA 2 NPU</td><td>AMD 锐龙 7 9700X<br>ProArt B850-CREATOR WIFI NEO</td></tr>
+              <tr><td>GPU／显存</td><td><strong>RTX 5070 Ti 16GB</strong><br>独立显存</td><td><strong>Radeon 8060S</strong><br>RDNA 3.5、40 CU、统一内存</td><td><strong>RTX 5090 32GB</strong><br>独立显存</td></tr>
+              <tr><td>内存／存储</td><td>64GB DDR5<br>2TB NVMe SSD</td><td>128GB LPDDR5X-8000<br>最高96GB统一显存；SSD最高8TB；5个SATA盘位</td><td>64GB DDR5<br>2TB NVMe SSD</td></tr>
+              <tr><td>机箱／电源</td><td>华硕 PA401 木艺铁韵版<br>TUF GAMING 750B EVO</td><td>约222.5×222.5×224mm<br>300W工业级电源</td><td>华硕 PA602 木艺铁韵版<br>TUF GAMING 1200G EVO</td></tr>
+              <tr><td>本地创作栈</td><td>AI图片／视频、ComfyUI增强版<br>MiniMax H3、LTX等预装模型</td><td>本地H3、ComfyUI、WorkBuddy、AI NAS</td><td>AI图片／视频、ComfyUI增强版<br>与5070 Ti采用同套创作系统</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subhead"><h3>2｜同规格视频：控制变量后的确定结论</h3><span class="note">不使用不同分辨率、不同步数样本做速度排名</span></div>
+        <div class="control-card">
+          <h4>唯一严格控变量速度结论｜Siltok 5070 Ti → 临时 RTX 5090 节点</h4>
+          <p>《大闹天宫》5条任务保持提示词、参考素材、模型／模式、LoRA、时长、分辨率与帧率一致，只更换GPU节点。</p>
+          <div class="control-stats">
+            <div class="control-stat"><strong>45:06</strong><span>5070 Ti 五条总耗时</span></div>
+            <div class="control-stat"><strong>09:26</strong><span>5090 五条总耗时</span></div>
+            <div class="control-stat"><strong>4.78×</strong><span>整体生成速度提升</span></div>
+            <div class="control-stat"><strong>79.1%</strong><span>端到端耗时下降</span></div>
+          </div>
+        </div>
+        <div class="proof-grid">
+          <article class="proof-card"><div class="proof-name">Siltok｜RTX 5070 Ti</div><div class="proof-config">正式产品配置</div><ul><li>9/9任务完成，覆盖480P—1080P</li><li>支持首尾帧及4—7张多参考图</li><li>复杂群像会出现丢对象、缩小尺度或合并动作</li></ul></article>
+          <article class="proof-card"><div class="proof-name">AINPCMax｜Radeon 8060S</div><div class="proof-config">统一内存一体机</div><ul><li>已确认1条864×480／8秒样片完成</li><li>16镜项目出现服务离线、单机串行与长队列</li><li>缺少同提示词、同输入及生成用时，不能进入速度或画质排名</li></ul></article>
+          <article class="proof-card"><div class="proof-name">AINPC 5090｜RTX 5090</div><div class="proof-config">独立显存32GB</div><ul><li>5条480P短片完成，页面总用时28分45秒</li><li>对照LibTV源片的综合质量平均3.08/5</li><li>704P×15秒五种模式均失败；5图×8秒失败</li></ul></article>
+        </div>
+        <div class="conclusion-bar"><strong>三机同规格结论：</strong>目前没有“5秒＋768P＋满血模型＋同提示词＋同seed＋同量化＋同步数”的三方共同完成样本，因此不发布三机速度和质量排名。这是当前数据能够支持的确定结论。</div>
+
+        <div class="subhead"><h3>3｜工作流与功能差异</h3><span class="note">只列已在产品页面或本轮实测中确认的能力</span></div>
+        <div class="compare-wrap">
+          <table class="compare">
+            <thead><tr><th>功能维度</th><th>Siltok Dash</th><th>AINPCMax</th><th>AINPC 5090版</th></tr></thead>
+            <tbody>
+              <tr><td>产品层级</td><td>本地桌面端创作与工作流编排平台</td><td>浏览器参数化视频生成控制台</td><td>浏览器参数化视频生成控制台</td></tr>
+              <tr><td>顶层模块</td><td>控制台、对话、ComfyUI、主机、设置</td><td>创作区、任务队列、画廊</td><td>创作区、当前任务、画廊、语言切换</td></tr>
+              <tr><td>创作与输入</td><td>文字、图片、视频；文生、多关键帧、参考视频、音频驱动</td><td>提示词、参考图、首帧、尾帧；最多9张参考图</td><td>与AINPCMax同类；增加Match／Max参考图尺寸策略</td></tr>
+              <tr><td>参数范围</td><td>480P／720P／1080P；5—15秒；自动、16:9、9:16</td><td>480P／704P／768P／1056P；1—15秒；5种画幅</td><td>480P／704P／768P；1—15秒；6种画幅</td></tr>
+              <tr><td>模型／推理</td><td>本机模型＋LoRA；实测满血、无LoRA、Turbo4／6／8及ComfyUI</td><td>Turbo4、Turbo8、BF16、完整Int8</td><td>Turbo4、Turbo8、BF16、FP8、完整Int8；参考图会限制部分模式</td></tr>
+              <tr><td>任务与资源</td><td>显示模型、GPU、显存、CPU、内存和加速队列；会话可管理</td><td>显示进度、耗时、ETA；队列可排序和取消，上限8</td><td>显示单任务进度、已用与剩余时间；未见同级队列排序</td></tr>
+              <tr><td>结果管理</td><td>会话保存提示词与结果；可重新生成、打开本地文件夹</td><td>画廊支持搜索、查看、复用与下载</td><td>画廊支持语言筛选、搜索与下载</td></tr>
+              <tr><td>已确认限制</td><td>高分辨率、多参考图和复杂动作会显著增加耗时</td><td>出现8188服务离线、单机吞吐低与长队列</td><td>高分辨率长片、5参考图任务出现显存失败</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="case-modal hidden" id="caseModal" role="dialog" aria-modal="true" aria-labelledby="caseModalTitle">
+    <div class="case-panel">
+      <div class="case-head"><div><h3 id="caseModalTitle">需求案例</h3><p id="caseModalSubtitle">用户反馈与可核验证据</p></div><button class="case-close" id="caseModalClose" type="button" aria-label="关闭">×</button></div>
+      <div class="case-body" id="caseModalBody"></div>
+    </div>
+  </div>
+
+  <div class="shell footer">Siltok 用户测试与产品决策看板 · 数据口径：29名名单、10份有效反馈 · <a href="https://github.com/hemolin23/ai-station-user-feedback-dashboard" target="_blank" rel="noopener">GitHub公开仓库</a></div>
+
+  <script>
+    const feedbackTagMap = {
+      '投流图片文字':['输出质量'], '动作战斗图':['输出质量'], '世界观设定图':['输出质量'], '场景融合':['输出质量'], '图生图一致性':['输出质量'], '人物与结构':['输出质量'], '文生视频':['输出质量'],
+      '模型可用性':['模型/设备兼容','易用性'], '生成时长':['性能不足'], '提示词还原':['输出质量'], '画面质感':['输出质量'], '生产流程':['功能缺失'],
+      '耗时不透明':['易用性','性能不足'], '速度瓶颈':['性能不足'], '画质差异':['输出质量'], '文字能力':['输出质量'], '交互与报错':['易用性'], '并发与批量':['功能缺失'], '能力边界':['需求/规则未定义'], '本地生产':['功能缺失'],
+      'AI对话':['性能不足'], '视频速度':['性能不足'], '音频质量':['输出质量'], '批量稳定性':['性能不足'], '接口能力':['功能缺失'], '质量验证':['需求/规则未定义','输出质量'], '提示词优化':['性能不足'], '设备效率':['性能不足'],
+      '界面占位':['易用性'], '参数保存':['易用性'], '模型说明':['需求/规则未定义','易用性'], '素材资产库':['功能缺失'], '项目管理':['功能缺失'], '参考图标注':['功能缺失'], '多分镜导演台':['功能缺失'], '自动拼接':['功能缺失'], '专业模式':['功能缺失'], '自定义工作流':['功能缺失','模型/设备兼容'],
+      '网络连接':['模型/设备兼容'], '问题处理':['已验证能力'], '短剧效果':['输出质量'], '内容边界':['需求/规则未定义'],
+      '长任务稳定性':['性能不足'], '工作流案例':['已验证能力'], '实际画质':['输出质量'], '本地/云端差异':['模型/设备兼容','输出质量'], '速度质量权衡':['性能不足','输出质量'], '资源供给':['性能不足'], '正向反馈':['已验证能力'], '自动化期待':['功能缺失'], '开放接入':['功能缺失'], 'Muse云端样片':['已验证能力'],
+      '人物生图':['输出质量'], '结构数量':['输出质量'], '测试阻塞':['需求/规则未定义'], '工作流建议':['方案建议'],
+      'FLUX生图':['输出质量','模型/设备兼容'], '视频方案':['已验证能力'], '图片方案':['已验证能力'], '一键生产':['已验证能力','功能缺失']
+    };
+    const matrixCells = document.querySelectorAll('.matrix > .cell');
+    const collaborationTemplate = document.getElementById('northAmericaCollabCard');
+    if (matrixCells[2] && collaborationTemplate && !matrixCells[2].querySelector('.user-card.collaboration')) {
+      matrixCells[2].appendChild(collaborationTemplate.content.cloneNode(true));
+    }
+
+    document.querySelectorAll('.matrix .user-card li').forEach(item => {
+      const label = item.querySelector('strong')?.textContent.trim().replace(/[：:]$/, '');
+      (feedbackTagMap[label] || ['需求/规则未定义']).forEach(type => {
+        const tag = document.createElement('span');
+        tag.className = 'problem-tag';
+        tag.dataset.type = type;
+        tag.textContent = type;
+        item.appendChild(tag);
+      });
+    });
+
+    const filters = document.querySelectorAll('.filter');
+    const decisions = document.querySelectorAll('.decision');
+    filters.forEach(button => button.addEventListener('click', () => {
+      filters.forEach(item => item.classList.remove('active'));
+      button.classList.add('active');
+      const value = button.dataset.filter;
+      decisions.forEach(card => card.classList.toggle('hidden', value !== 'all' && card.dataset.priority !== value));
+    }));
+
+    const key = 'siltok-decision-state-v1';
+    const saved = JSON.parse(localStorage.getItem(key) || '{}');
+    document.querySelectorAll('.checks input').forEach(input => {
+      if (saved[input.name] === input.parentElement.textContent.trim()) input.checked = true;
+      input.addEventListener('change', () => {
+        if (!input.checked) return;
+        saved[input.name] = input.parentElement.textContent.trim();
+        localStorage.setItem(key, JSON.stringify(saved));
+      });
+    });
+
+    const needCases = {
+      quality: [
+        { user: 'Carl｜电商广告', type: '用户反馈', text: '投流图片的小字出现糊字、错字和非正常字；高架桥、办公室多人等视频场景画面模糊，无法直接投放。' },
+        { user: '倪海敬｜独立创作', type: '重复出现', text: '文生视频每次都出现画面模糊、人脸看不清；Boogu生图也出现整体模糊和多生成一把刀。' },
+        { user: '小皓｜工作流', type: '量化描述', text: '选择1080P时实际观感约为480P；不加速仍模糊且耗时超过1小时。' },
+        { user: 'AI设计张张', type: '用户判断', text: '认为当前FLUX生图质量和提示词遵循较差，怀疑问题与模型或工作流配置有关。' },
+        { user: '辛导｜送审样片一', type: '送审样片＋专家意见', text: '辛导基于这条真人女性近景样片判断：AI感较重、影调感不足、视听语言单一；同时肯定景深和人物微表情，尤其是眨眼细节。', media: 'assets/xindao-reviewed-sample-tone.mp4', poster: 'assets/xindao-reviewed-sample-tone.jpg', limit: '源文件证据：10.157秒、768×1344、竖屏、有音频。抽帧可见女性持书近景及连续表情变化；“AI感重、影调不足”等属于辛导的专业判断。' },
+        { user: '辛导｜非测试专家评审', type: '评审意见＋参考成品', text: '辛导认为样片一AI感较重、缺少影调感、视听语言单一；同时肯定景深和人物微表情，特别是眨眼细节。附件是其提供的电影感成品，用于建立影调与镜头语言参照。', media: 'assets/xindao-cinematic-tone-reference.mp4', poster: 'assets/xindao-cinematic-tone-reference.jpg', limit: '可见参考证据：111.67秒、1280×720，包含室内人物、森林动作、战争废墟、站台、宿舍、餐厅钢琴与教堂等多场景，画面呈现明显的明暗、色彩和景深变化。该附件是辛导的参考成品，不是被评审的Siltok样片，因此不能单独证明“AI感重”等问题。' }
+      ],
+      stability: [
+        { user: '小皓｜工作流', type: 'P0问题', text: '云端批量或长任务频繁掉线，无法稳定无人值守。交接文档属于Codex结合ComfyUI的正向工作流案例，不作为“项目无法恢复”的证据。' },
+        { user: '白总·沈阳', type: '实测报错', text: '5070服务器批量生成时出现“请求超时10秒”，任务耗时波动较大。' },
+        { user: '李哲｜AI漫剧', type: '交互阻塞', text: '任务失败或报错后缺少继续操作指引，用户不知道下一步应重试、切换模型还是等待。' }
+      ],
+      prompt: [
+        { user: '日本短剧公司', type: '同提示词对比', text: '同一提示词无法被稳定、精准还原，对设备、光线及人物状态的锁定存在差距。' },
+        { user: 'Carl｜电商广告', type: '结构错误', text: '动作图出现握刀姿势错误、刀柄分离；图生图后鞋面颜色发生变化。' },
+        { user: '倪海敬｜独立创作', type: '数量错误', text: '要求五条能量线路时实际生成出多条；人物短披风也被遗漏。' },
+        { user: 'AI设计张张', type: '方案对比', text: '用户称其H3双采和Qwen 2.1工作流指令遵循更稳定，但目前没有同提示词、同参数的严格对照样本。' }
+      ],
+      time: [
+        { user: '李哲｜AI漫剧', type: '显示偏差', text: '页面显示生成6分钟，实际超过18分钟，排队时间没有被清晰计入。' },
+        { user: '日本短剧公司', type: '业务底线', text: '15秒视频平均等待接近10分钟，对连续镜头生产偏久。' },
+        { user: '嘉弈｜自媒体', type: '极端耗时', text: '非满血模型生成15秒、720P视频约需60分钟，已影响创作节奏。' }
+      ],
+      device: [
+        { user: '碳水大王', type: '环境适配', text: 'Tailscale默认未接受公司节点发布的192.168.123/124内网路由；开启accept-routes后恢复连接。' },
+        { user: 'AI设计张张', type: '配置疑问', text: '用户把质量问题指向模型与工作流配置，说明产品需要明确推荐可运行的模型、工作流和参数组合。' }
+      ],
+      knowledge: [
+        { user: '白总·电商', type: '重复劳动', text: '常用人物、商品、声音和场景每次都要重新上传，无法跨项目复用。' },
+        { user: '白总·电商', type: '项目管理', text: '历史任务以会话分散，缺少按项目、商品、类型和版本组织的资产空间。' }
+      ],
+      template: [
+        { user: 'AI设计张张｜自建工作流案例', type: '视频证据', text: '用户称该案例来自自己的工作流：视频使用MiniMax H3双采，图片使用Qwen 2.1，并通过内置提示词一键直出。', media: 'assets/design-zhangzhang-workflow-case.mp4', poster: 'assets/design-zhangzhang-workflow-case.jpg', limit: '可见证据：10.125秒、960×544，古风女性角色完成连续动作，人物、服装与场景总体连续。该视频不能独立证明具体模型、采样参数，也不能证明其优于Siltok。' },
+        { user: '白总·电商', type: '高级工作流', text: '希望默认简单模式保留常用参数，同时允许专业用户导入自己的ComfyUI节点和工作流。' },
+        { user: '日本短剧公司', type: '项目工作流', text: '30分钟以上项目依赖自由画布管理角色资产和尾帧续做，现有单任务流程难以承担完整项目。' }
+      ],
+      batch: [
+        { user: '白总·沈阳', type: 'API需求', text: '批量生产需要API支持任务提交、进度查询、结果获取和失败重试。' },
+        { user: '小皓｜工作流', type: '无人值守', text: '希望云端工作流可以持续运行，实现批量全自动生产，而不是人工盯守。' },
+        { user: '李哲｜AI漫剧', type: '生产链路', text: '需要并发多任务及“挂清单→排队→自动生产”的批量链路。' }
+      ],
+      consistency: [
+        { user: '日本短剧公司', type: '连续项目', text: '希望通过自由画布减少资产重复导入和尾帧续做成本，并保持连续镜头角色一致。' },
+        { user: '白总·电商', type: '分镜控制', text: '单个大提示词难以控制多镜头，需要逐镜设置人物、商品、场景、动作、运镜、对白和时长。' },
+        { user: '倪海敬｜独立创作', type: '单镜基础问题', text: '当前单镜头仍存在服装遗漏、数量错误和人脸模糊，进入多镜头前需先建立基础通过率。' },
+        { user: '辛导｜送审样片二', type: '送审样片＋专家意见', text: '辛导基于这条动漫动作样片判断：整体未达预期、动作缺少动画规律，人物手指发生结构崩坏。', media: 'assets/xindao-reviewed-sample-animation.mp4', poster: 'assets/xindao-reviewed-sample-animation.jpg', limit: '源文件证据：15.107秒、736×1312、竖屏、有音频。抽帧可见动漫男性角色、纸张/钞票运动元素、后方链条人物及手部近景；动作规律与手指问题为辛导的专业评审结论。' },
+        { user: '辛导｜非测试专家评审', type: '评审意见＋分镜参照', text: '辛导认为样片二整体未达预期，动作缺少动画规律，人物手指发生结构崩坏；建议按分镜检查关键姿态、运动节奏和镜头衔接。附件为其提供的分镜/成片参照。', media: 'assets/xindao-storyboard-animation-reference.mp4', poster: 'assets/xindao-storyboard-animation-reference.jpg', limit: '可见参考证据：30秒、720×1280，画面上下并置线稿/分镜与完成动画，连续展示人物、能量环、龙形特效及终场构图。该附件是参考案例，不是被评审的Siltok样片，无法据此直接复核手指崩坏位置或程度。' }
+      ],
+      hybrid: [
+        { user: 'AI设计张张', type: '成本约束', text: '自建一键工作流可以运行，但仍需要租用云端机器，说明算力位置与持续成本影响使用选择。' },
+        { user: '小皓｜工作流', type: '云端诉求', text: '希望云端电脑持续执行自动化工作流；同时认为同指令下云端H3与本地结果差异明显。' }
+      ],
+      portable: [{ user: '白总·电商', type: '工作流迁移', text: '希望支持ComfyUI自定义工作流导入，避免专业用户已有节点和创意无法迁移。' }],
+      muse: [
+        { user: '小皓｜Muse云端案例', type: '视频证据＋用户陈述', text: '小皓称该样片由Muse在云端以“1K画质”生成，并建议通过合适API接入Muse类AI，让云端电脑持续运行视频任务，减少对Codex人工操作的依赖。', media: 'assets/xiaohao-muse-cloud-1k-case.mp4', poster: 'assets/xiaohao-muse-cloud-1k-case.jpg', limit: '可见证据：20.37秒、1080×1920、竖屏古装剧情视频，包含室内到户外长城/山景的场景转换与中文字幕。视频本身不能证明所用平台、API、生成耗时、无人值守或全自动化能力；这些属于用户陈述，需接口实测验证。' },
+        { user: '小皓｜工作流判断', type: '待验证方案', text: '需要验证的底层需求不是“接入Muse”本身，而是云端任务可持续运行、自动提交下一段、失败自动重试、结果回收和项目状态持久化。当前仍主要依赖Codex操作，尚未形成产品内闭环。' }
+      ],
+      sigma: [{ user: '倪海敬｜独立创作', type: '指定方案', text: '建议增加“插值扩展Sigma”节点提升清晰度；应先验证效果，不直接等同产品需求。' }],
+      aepr: [{ user: '李哲｜AI漫剧', type: '专业流程', text: '希望本地生成结果可直接联动AE、PR，减少云端下载后再进入剪辑的流程损耗。' }],
+      violent: [{ user: '碳水大王', type: '边界需求', text: '希望生成带轻度血腥感的限制级画面和声音，但未成功；该诉求需由安全与合规边界决定。' }]
+    };
+
+    const needsBoard = document.querySelector('.board.needs');
+    const editButton = document.getElementById('needsEditToggle');
+    const needStorageKey = 'siltok-needs-edit-v1';
+    const needSaved = JSON.parse(localStorage.getItem(needStorageKey) || '{}');
+    document.querySelectorAll('.need').forEach(card => {
+      const id = card.dataset.needId;
+      const title = card.querySelector('.need-copy strong');
+      const desc = card.querySelector('.need-copy small');
+      const status = card.querySelector('.status');
+      if (needSaved[id]) {
+        title.textContent = needSaved[id].title || title.textContent;
+        desc.textContent = needSaved[id].desc || desc.textContent;
+        if (needSaved[id].status) {
+          status.textContent = needSaved[id].status;
+          status.className = 'status ' + (needSaved[id].status === '真需求' ? 'true' : needSaved[id].status === '不纳入' ? 'boundary' : 'pending');
+        }
+      }
+      const saveNeed = () => {
+        needSaved[id] = { title: title.textContent.trim(), desc: desc.textContent.trim(), status: status.textContent.trim() };
+        localStorage.setItem(needStorageKey, JSON.stringify(needSaved));
+      };
+      title.addEventListener('input', saveNeed);
+      desc.addEventListener('input', saveNeed);
+      status.addEventListener('click', () => {
+        if (!needsBoard.classList.contains('editing')) return;
+        const values = ['真需求', '待验证', '观察', '不纳入'];
+        const next = values[(values.indexOf(status.textContent.trim()) + 1 + values.length) % values.length];
+        status.textContent = next;
+        status.className = 'status ' + (next === '真需求' ? 'true' : next === '不纳入' ? 'boundary' : 'pending');
+        saveNeed();
+      });
+    });
+    document.querySelectorAll('.deep-card').forEach(card => {
+      const id = `deep-${card.dataset.deepId}`;
+      const title = card.querySelector('strong');
+      const text = card.querySelector('p');
+      if (needSaved[id]) {
+        title.textContent = needSaved[id].title || title.textContent;
+        text.textContent = needSaved[id].desc || text.textContent;
+      }
+      const saveDeep = () => {
+        needSaved[id] = { title: title.textContent.trim(), desc: text.textContent.trim() };
+        localStorage.setItem(needStorageKey, JSON.stringify(needSaved));
+      };
+      title.addEventListener('input', saveDeep);
+      text.addEventListener('input', saveDeep);
+    });
+    editButton.addEventListener('click', () => {
+      const active = needsBoard.classList.toggle('editing');
+      editButton.classList.toggle('active', active);
+      editButton.textContent = active ? '完成编辑' : '编辑需求';
+      document.querySelectorAll('.need-copy strong, .need-copy small, .deep-card strong, .deep-card p').forEach(el => el.contentEditable = active ? 'true' : 'false');
+    });
+
+    const specSection = document.getElementById('specification');
+    const specEditButton = document.getElementById('specEditToggle');
+    const specResetButton = document.getElementById('specReset');
+    const specSaveState = document.getElementById('specSaveState');
+    const specStorageKey = 'siltok-specification-edit-v1';
+    let specSaved = {};
+    try { specSaved = JSON.parse(localStorage.getItem(specStorageKey) || '{}'); } catch (_) { specSaved = {}; }
+    const specDefaults = {};
+    const specFields = card => Array.from(card.querySelectorAll('.spec-top strong, .metric-chip, dt, dd'));
+    const setSpecEditing = active => {
+      specSection.classList.toggle('editing', active);
+      specEditButton.classList.toggle('active', active);
+      specEditButton.textContent = active ? '完成编辑' : '编辑规格';
+      specSection.querySelectorAll('.spec-card .spec-top strong, .spec-card .metric-chip, .spec-card dt, .spec-card dd').forEach(el => {
+        el.contentEditable = active ? 'true' : 'false';
+        el.spellcheck = false;
+      });
+      specSaveState.textContent = active ? '编辑中 · 自动保存' : (Object.keys(specSaved).length ? '已保存' : '未编辑');
+    };
+    document.querySelectorAll('.spec-card').forEach(card => {
+      const id = card.dataset.specId;
+      const fields = specFields(card);
+      specDefaults[id] = fields.map(el => el.textContent.trim());
+      if (Array.isArray(specSaved[id])) fields.forEach((el, index) => { if (typeof specSaved[id][index] === 'string') el.textContent = specSaved[id][index]; });
+      fields.forEach(el => el.addEventListener('input', () => {
+        specSaved[id] = specFields(card).map(field => field.textContent.trim());
+        localStorage.setItem(specStorageKey, JSON.stringify(specSaved));
+        specSaveState.textContent = '已自动保存';
+      }));
+    });
+    specEditButton.addEventListener('click', () => setSpecEditing(!specSection.classList.contains('editing')));
+    specResetButton.addEventListener('click', () => {
+      if (!window.confirm('确认恢复“真需求规格化”的默认内容？当前浏览器中的修改将被清除。')) return;
+      document.querySelectorAll('.spec-card').forEach(card => specFields(card).forEach((el, index) => { el.textContent = specDefaults[card.dataset.specId][index]; }));
+      specSaved = {};
+      localStorage.removeItem(specStorageKey);
+      setSpecEditing(false);
+      specSaveState.textContent = '已恢复默认';
+    });
+
+    const caseModal = document.getElementById('caseModal');
+    const caseTitle = document.getElementById('caseModalTitle');
+    const caseSubtitle = document.getElementById('caseModalSubtitle');
+    const caseBody = document.getElementById('caseModalBody');
+    const caseNoteKey = 'siltok-case-notes-v1';
+    const caseNotes = JSON.parse(localStorage.getItem(caseNoteKey) || '{}');
+    const escapeHtml = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    document.querySelectorAll('.case-trigger').forEach(button => button.addEventListener('click', () => {
+      const id = button.dataset.caseId;
+      const needCard = button.closest('.need') || document.querySelector(`[data-need-id="${id}"]`);
+      const items = needCases[id] || [];
+      caseTitle.textContent = needCard?.querySelector('.need-copy strong')?.textContent.trim() || '需求案例';
+      caseSubtitle.textContent = `${items.length}个关联案例 · 用户反馈与证据边界分开呈现`;
+      caseBody.innerHTML = items.map(item => `<article class="case-card"><div class="case-card-top"><strong>${escapeHtml(item.user)}</strong><span class="evidence-chip">${escapeHtml(item.type)}</span></div><p>${escapeHtml(item.text)}</p>${item.media ? `<video controls playsinline preload="metadata" poster="${escapeHtml(item.poster)}"><source src="${escapeHtml(item.media)}" type="video/mp4">浏览器不支持视频播放。</video>` : ''}${item.limit ? `<div class="case-limit">${escapeHtml(item.limit)}</div>` : ''}</article>`).join('') + `<div class="case-card"><label class="case-note-label" for="caseNote">补充判断（可编辑，保存在当前浏览器）</label><textarea class="case-note" id="caseNote" placeholder="记录需要补充验证的条件、对照组或研发结论……">${escapeHtml(caseNotes[id] || '')}</textarea></div>`;
+      caseBody.querySelector('#caseNote').addEventListener('input', event => {
+        caseNotes[id] = event.target.value;
+        localStorage.setItem(caseNoteKey, JSON.stringify(caseNotes));
+      });
+      caseModal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }));
+    const closeCaseModal = () => { caseModal.classList.add('hidden'); document.body.style.overflow = ''; };
+    document.getElementById('caseModalClose').addEventListener('click', closeCaseModal);
+    caseModal.addEventListener('click', event => { if (event.target === caseModal) closeCaseModal(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape' && !caseModal.classList.contains('hidden')) closeCaseModal(); });
+  </script>
+</body>
+</html>
